@@ -7,6 +7,7 @@
 #include "cJSON.h"
 
 JSONConfig config;
+cJSON *live_info;
 
 int qtdeDispositivosEntrada;
 int dispositivosEntrada[7];
@@ -28,8 +29,8 @@ JSONConfig leJSONConfig(const char* nomeArquivo) {
     FILE *arq = fopen(nomeArquivo,"r");
     fread(json_buffer, 2200, 1, arq);
 	  fclose(arq);
-    cJSON *devices = cJSON_Parse(json_buffer);
-    if (devices == NULL)
+    cJSON *live_info = cJSON_Parse(json_buffer);
+    if (live_info == NULL)
     {
         const char *error_ptr = cJSON_GetErrorPtr();
         if (error_ptr != NULL)
@@ -39,17 +40,17 @@ JSONConfig leJSONConfig(const char* nomeArquivo) {
         return config;
     }
 
-    nomeAndar = cJSON_GetObjectItemCaseSensitive(devices, "nome");
+    nomeAndar = cJSON_GetObjectItemCaseSensitive(live_info, "nome");
     printf("Analisando \"%s\"\n", nomeAndar->valuestring);
-    cJSON *ip_json = cJSON_GetObjectItemCaseSensitive(devices, "ip_servidor_central");
+    cJSON *ip_json = cJSON_GetObjectItemCaseSensitive(live_info, "ip_servidor_central");
     strcpy(config.ipCentral, ip_json->valuestring);
 
-    cJSON *porta_json = cJSON_GetObjectItemCaseSensitive(devices, "porta_servidor_distribuido");
+    cJSON *porta_json = cJSON_GetObjectItemCaseSensitive(live_info, "porta_servidor_distribuido");
     config.portaDistribuido = porta_json->valueint;
 
     printf("IP: %s e Porta: %d\n", config.ipCentral, config.portaDistribuido);
-
-    inputs = cJSON_GetObjectItemCaseSensitive(devices, "inputs");
+// printf("%s", cJSON_Print(live_info));
+    inputs = cJSON_GetObjectItemCaseSensitive(live_info, "inputs");
 
     qtdeDispositivosEntrada = 0;
     cJSON_ArrayForEach(item, inputs)
@@ -57,15 +58,37 @@ JSONConfig leJSONConfig(const char* nomeArquivo) {
 
         cJSON *tag = cJSON_GetObjectItemCaseSensitive(item, "tag");
         cJSON *gpio = cJSON_GetObjectItemCaseSensitive(item, "gpio");
+        cJSON *sigla = cJSON_GetObjectItemCaseSensitive(item, "sigla");
+        cJSON *status = cJSON_GetObjectItemCaseSensitive(item, "status");
 
         printf("%s na gpio %d\n", tag->valuestring, gpio->valueint);
 
+
         dispositivosEntrada[qtdeDispositivosEntrada] = gpio->valueint;
         qtdeDispositivosEntrada += 1;
+
+        if(strcmp(sigla->valuestring,"SPres")==0)
+           config.SPres = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"SFum")==0)
+           config.SFum = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"SJan")==0)
+           config.SJan = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"SPor")==0)
+           config.SPor = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"SC_IN")==0)
+           config.SC_IN = gpio->valueint;
+           
+        if(strcmp(sigla->valuestring,"SC_OUT")==0)
+           config.SC_OUT = gpio->valueint;
+        
     }
 
 
-    outputs = cJSON_GetObjectItemCaseSensitive(devices, "outputs");
+    outputs = cJSON_GetObjectItemCaseSensitive(live_info, "outputs");
 
     qtdeDispositivosSaida = 0;
     cJSON_ArrayForEach(item, outputs)
@@ -76,18 +99,6 @@ JSONConfig leJSONConfig(const char* nomeArquivo) {
 
         printf("%s na gpio %d\n", tag->valuestring, gpio->valueint);
 
-        if(strcmp(tag->valuestring,"SPres"))
-           config.SPres = gpio->valueint;
-        if(strcmp(tag->valuestring,"SFum"))
-           config.SFum = gpio->valueint;
-        if(strcmp(tag->valuestring,"SJan"))
-           config.SJan = gpio->valueint;
-        if(strcmp(tag->valuestring,"SPor"))
-           config.SPor = gpio->valueint;
-        if(strcmp(tag->valuestring,"SC_IN"))
-           config.SC_IN = gpio->valueint;
-        if(strcmp(tag->valuestring,"SC_OUT"))
-           config.SC_OUT = gpio->valueint;
         
 
         dispositivosSaida[qtdeDispositivosSaida] = gpio->valueint;
@@ -103,6 +114,9 @@ int *getDispositivosEntrada(){
   return dispositivosEntrada;
 }
 
+JSONConfig getConfig(){
+   return config;
+}
 int getQtdeDispositivosEntrada(){
   return qtdeDispositivosEntrada;
 }
@@ -116,5 +130,5 @@ int *getDispositivosSaida(){
 }
 
 int getPorta(){
-  return 10130;
+  return config.portaDistribuido;
 }

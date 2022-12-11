@@ -1,85 +1,97 @@
 {
-    "ip_servidor_central": "192.168.0.53",
-    "porta_servidor_central": 10030,
-    "ip_servidor_distribuido": "192.168.0.52",
-    "porta_servidor_distribuido": 10230,
-    "nome": "1º Andar",
-    "outputs": [
-        {
-          "type": "lampada",
-          "sigla": "L_01",
-          "tag": "Lâmpada 01 da Sala",
-          "gpio": 1
-        },
-        {
-            "type": "lampada",
-            "sigla": "L_01",
-            "tag": "Lâmpada 02 da Sala",
-            "gpio": 4
-        },
-        {
-            "type": "ar-condicionado",
-            "sigla": "AC",
-            "tag": "Ar-Condicionado",
-            "gpio": 5
-        },
-        {
-            "type": "projetor",
-            "sigla": "PR",
-            "tag": "Ar-Condicionado",
-            "gpio": 6
-        },
-        {
-            "type": "buzzer",
-            "sigla": "AL_BZ",
-            "tag": "Alarme (buzzer)",
-            "gpio": 10
-        }
-    ],
-    "inputs": [
-        {
-          "type": "presenca",
-          "sigla": "SPres",
-          "tag": "Sensor de Presença",
-          "gpio": 11
-        },
-        {
-            "type": "fumaca",
-            "sigla": "SFum",
-            "tag": "Sensor de Fumaça",
-            "gpio": 31
-        },
-        {
-          "type": "janela",
-          "sigla": "SJan",
-          "tag": "Sensor de Janela T01",
-          "gpio": 26
-        },
-        {
-            "type": "janela",
-            "sigla": "SPor",
-            "tag": "Sensor de Janela T02",
-            "gpio": 27
-        },
-        {
-          "type": "contagem",
-          "sigla": "SC_IN",
-          "tag": "Sensor de Contagem de Pessoas Entrada",
-          "gpio": 28
-        },
-        {
-          "type": "contagem",
-          "sigla": "SC_OUT",
-          "tag": "Sensor de Contagem de Pessoas Saída",
-          "gpio": 29
-        }
-    ],
-    "sensor_temepratura":[
-        {
-          "model": "dth22",
-          "sigla": "DHT22",
-          "tag": "Sensor de Temperatura / Umidade DHT22",
-          "gpio": 7
-        }
-    ]
+  "ip_servidor_central": "127.0.0.1",
+  "porta_servidor_central": 11130,
+  "ip_servidor_distribuido": "127.0.0.1",
+  "porta_servidor_distribuido": 10131,
+  "nome": "Config 2-4",
+  "outputs": [
+    {
+      "type": "lampada",
+      "sigla": "L_01",
+      "tag": "Lâmpada 01 da Sala",
+      "gpio": 1,
+      "status": 0
+    },
+    {
+      "type": "lampada",
+      "sigla": "L_01",
+      "tag": "Lâmpada 02 da Sala",
+      "gpio": 4,
+      "status": 0
+    },
+    {
+      "type": "ar-condicionado",
+      "sigla": "AC",
+      "tag": "Ar-Condicionado",
+      "gpio": 5,
+      "status": 0
+    },
+    {
+      "type": "projetor",
+      "sigla": "PR",
+      "tag": "Projetor Multimídia",
+      "gpio": 6,
+      "status": 0
+    },
+    {
+      "type": "buzzer",
+      "sigla": "AL_BZ",
+      "tag": "Alarme (buzzer)",
+      "gpio": 10,
+      "status": 0
+    }
+  ],
+  "inputs": [
+    {
+      "type": "presenca",
+      "sigla": "SPres",
+      "tag": "Sensor de Presença",
+      "gpio": 11,
+      "status": 0
+    },
+    {
+      "type": "fumaca",
+      "sigla": "SFum",
+      "tag": "Sensor de Fumaça",
+      "gpio": 31,
+      "status": 0
+    },
+    {
+      "type": "janela",
+      "sigla": "SJan",
+      "tag": "Sensor de Janela T01",
+      "gpio": 26,
+      "status": 0
+    },
+    {
+      "type": "janela",
+      "sigla": "SPor",
+      "tag": "Sensor de Janela T02",
+      "gpio": 27,
+      "status": 0
+    },
+    {
+      "type": "contagem",
+      "sigla": "SC_IN",
+      "tag": "Sensor de Contagem de Pessoas Entrada",
+      "gpio": 28,
+      "status": 0
+    },
+    {
+      "type": "contagem",
+      "sigla": "SC_OUT",
+      "tag": "Sensor de Contagem de Pessoas Saída",
+      "gpio": 29,
+      "status": 0
+    }
+  ],
+  "sensor_temepratura": [
+    {
+      "model": "dth22",
+      "sigla": "DHT22",
+      "tag": "Sensor de Temperatura / Umidade DHT22",
+      "gpio": 7,
+      "status": 0
+    }
+  ]
 }

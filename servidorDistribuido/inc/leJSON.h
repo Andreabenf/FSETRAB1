@@ -13,12 +13,15 @@ int SC_OUT;
     
 } JSONConfig;
 
+
+
 JSONConfig leJSONConfig(const char* nomeArquivo);
 int *getDispositivosEntrada();
 int getQtdeDispositivosEntrada();
 int getQtdeDispositivosSaida();
 int *getDispositivosSaida();
 int getPorta();
+JSONConfig getConfig();
 
 
 #endif /* LEJSON_H_ */

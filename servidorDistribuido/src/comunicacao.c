@@ -52,7 +52,6 @@ void* recebeCentral(void *porta) {
       int item;
       int status;
       sscanf(buffer, "%d %d %d", &command, &item, &status);
-      printf("%d %d %d", command, item, status);
       printf("Requisicao para alterar estado do dispositivo %d\n", item);
       ativaDesativaDispositivo(item, status);
       char buf[2];
@@ -92,8 +91,8 @@ void enviaCentral(char *message) {
   }
 
   client.sin_family = AF_INET;
-  client.sin_addr.s_addr = inet_addr("192.168.0.53");
-  client.sin_port = htons(10030);
+  client.sin_addr.s_addr = inet_addr("127.0.0.1");
+  client.sin_port = htons(11131);
 
   while(connect(socketid, (struct sockaddr*) &client, sizeof(client)) < 0){
     printf("Erro ao tentar conectar com o servidor, tentando novamente\n");
