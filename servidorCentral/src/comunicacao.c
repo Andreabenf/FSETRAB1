@@ -30,7 +30,7 @@
 
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = htonl(INADDR_ANY);
-	server.sin_port = htons(10030);
+	server.sin_port = htons(11130);
 
 	bind(serverid, (struct sockaddr*) &server, sizeof(server));
 
@@ -76,7 +76,7 @@ DHT22 leDHT() {
     return dht22;
   }
 
-  // unsigned short servidorPorta = 10130;
+  // unsigned short servidorPorta = 11130;
 
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = inet_addr(SERVER_DISTRIBUTED_IP);
@@ -134,6 +134,8 @@ int enviaDistribuido(int item, int status, unsigned short int porta) {
   
   int socketid = socket(AF_INET, SOCK_STREAM, 0);
   if (socketid == -1) {
+    printf("error\n");
+
     exit(0);
   }
   
@@ -142,6 +144,7 @@ int enviaDistribuido(int item, int status, unsigned short int porta) {
   client.sin_port = htons(porta);
 
   if (connect(socketid, (struct sockaddr*) &client, sizeof(client)) < 0) {
+    printf("error\n");
     exit(0);
   }
 
@@ -149,12 +152,14 @@ int enviaDistribuido(int item, int status, unsigned short int porta) {
   snprintf(buf, 7, "%d %d %d", 1, item, status);
   int size = strlen(buf);
   if (send(socketid, buf, size, 0) != size) {
+    printf("error\n");
     exit(0);
   }
 
   char buffer[16];
   int size_rec = recv(socketid, buffer, 16, 0);
   if (size_rec < 0) {
+    printf("error\n");
     exit(0);
   }
 

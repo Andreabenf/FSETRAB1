@@ -11,8 +11,8 @@
 
 
 void atualizaDispositivo(int dispNum, int novoStatus, int serv){
-  unsigned short int porta = serv ? 10130 : 10130;
-printf("recebo");
+  unsigned short int porta = serv ? 11130 : 11130;
+  printf("recebo");
   enviaDistribuido(dispNum, novoStatus, porta);
 }
 
@@ -158,11 +158,13 @@ void trata_SIGTSTP(int signum) {
 
 void* menuFunc() {
     signal(SIGTSTP, trata_SIGTSTP);
-    // system("clear");
+    system("clear");
     while(1) {
-        system("clear");
         mostraMenu();
-        sleep(2);
+        printf("jorge");
+        sleep(200);
+        printf("jorges");
+
         // leTempUmidade();
         __fpurge(stdin);
 

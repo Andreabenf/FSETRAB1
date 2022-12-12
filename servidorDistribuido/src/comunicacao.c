@@ -8,6 +8,22 @@
 #include "dht.h"
 #include "gpio.h"
 
+void TrataClienteTCP(int socketCliente) {
+	char buffer[16];
+	int tamanhoRecebido;
+
+	if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+		printf("Erro no recv()\n");
+
+	while (tamanhoRecebido > 0) {
+		if(send(socketCliente, buffer, tamanhoRecebido, 0) != tamanhoRecebido)
+			printf("Erro no envio - send()\n");
+		
+		if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+			printf("Erro no recv()\n");
+	}
+}
+
 void* recebeCentral(void *porta) {
 
   int this_port = *((int *) porta);
@@ -56,10 +72,8 @@ void* recebeCentral(void *porta) {
       ativaDesativaDispositivo(item, status);
       char buf[2];
       snprintf(buf, 2, "%d", 1);
-      int size = strlen(buf);
-      if (send(clientid, buf, size, 0) != size) {
-        printf("Error: Send failed\n");
-      }
+      
+      
     }
 
     // 2 means temperature and humidity reading
@@ -73,6 +87,7 @@ void* recebeCentral(void *porta) {
         printf("Error: Send failed\n");
       }
     }
+    // TrataClienteTCP(clientid);
 		close(clientid);
   }
 
@@ -92,7 +107,7 @@ void enviaCentral(char *message) {
 
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = inet_addr("127.0.0.1");
-  client.sin_port = htons(11131);
+  client.sin_port = htons(11130);
 
   while(connect(socketid, (struct sockaddr*) &client, sizeof(client)) < 0){
     printf("Erro ao tentar conectar com o servidor, tentando novamente\n");

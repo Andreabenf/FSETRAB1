@@ -96,7 +96,7 @@ void SensorSaida(void)
   int estado = digitalRead(pin);
   if (estado)
   {
-    enviaCentral("message");
+    enviaCentral("Saiu");
     printf("Saiu!\n");
   }
   else

@@ -24,13 +24,13 @@ int main(int argc, const char * argv[]) {
 
     signal(SIGINT, trata_SIGINT);
 
-    pthread_create(&menu, NULL, menuFunc, NULL);
+    // pthread_create(&menu, NULL, menuFunc, NULL);
     pthread_create(&recebe, NULL, recebeDistribuido, NULL);
     // pthread_create(&tempUmi, NULL, leTempUmidade, NULL);
     
     pthread_join(recebe, NULL);
     // pthread_join(tempUmi, NULL);
-    pthread_join(menu, NULL);
+    // pthread_join(menu, NULL);
 
     return 0;
 }
