@@ -19,27 +19,86 @@
 
 #include "comunicacao.h"
 #include "menu.h"
+#include "cJSON.h"
 
 void TrataClienteTCP(int socketCliente) {
-	char buffer[16];
-	int tamanhoRecebido;
+  /* 1. Declara variáveis para tratamento do cliente */
+  int bufferSize = 550;
+	char buffer[bufferSize];
+	int tamanhoRecebido, command;
 
-	if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+  /* 2. Limpa buffer para garantir a leitura de mensagens novas */
+  memset(buffer, '\0', sizeof(buffer));
+
+  /* 3. Obtém tamanho da mensagem recebida */
+	if((tamanhoRecebido = recv(socketCliente, buffer, bufferSize, 0)) < 0)
 		printf("Erro no recv()\n");
 
-	while (tamanhoRecebido > 0) {
-		if(send(socketCliente, buffer, tamanhoRecebido, 0) != tamanhoRecebido)
-			printf("Erro no envio - send()\n");
-		
-		if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
-			printf("Erro no recv()\n");
-	}
+  // printf("Mensagem: '%s'\n", buffer);
+
+  /*---------------- Processa JSON ----------------------*/
+  cJSON *body = cJSON_Parse(buffer);
+
+  const cJSON *id = NULL;
+  const cJSON *L_01 = NULL;
+  const cJSON *L_02 = NULL;
+  const cJSON *AC = NULL;
+  const cJSON *PR = NULL;
+  const cJSON *AL_BZ = NULL;
+  const cJSON *SPres = NULL;
+  const cJSON *SFum = NULL;
+  const cJSON *SJan = NULL;
+  const cJSON *SPor = NULL;
+  const cJSON *SC_IN = NULL;
+  const cJSON *SC_OUT = NULL;
+  const cJSON *DHT22 = NULL;
+
+  id = cJSON_GetObjectItemCaseSensitive(body, "id");
+  L_01 = cJSON_GetObjectItemCaseSensitive(body, "L_01");
+  L_02 = cJSON_GetObjectItemCaseSensitive(body, "L_02");
+  AC = cJSON_GetObjectItemCaseSensitive(body, "AC");
+  PR = cJSON_GetObjectItemCaseSensitive(body, "PR");
+  AL_BZ = cJSON_GetObjectItemCaseSensitive(body, "AL_BZ");
+  SPres = cJSON_GetObjectItemCaseSensitive(body, "SPres");
+  SFum = cJSON_GetObjectItemCaseSensitive(body, "SFum");
+  SJan = cJSON_GetObjectItemCaseSensitive(body, "SJan");
+  SPor = cJSON_GetObjectItemCaseSensitive(body, "SPor");
+  SC_IN = cJSON_GetObjectItemCaseSensitive(body, "SC_IN");
+  SC_OUT = cJSON_GetObjectItemCaseSensitive(body, "SC_OUT");
+  DHT22 = cJSON_GetObjectItemCaseSensitive(body, "DHT22");
+
+  // if (cJSON_IsString(id) && (id->valuestring != NULL)) {
+  //   printf("id: '%s'\n", id->valuestring);
+  // } else {
+  //   printf("Se fudeu\n");
+  // }
+
+  printf("id: '%s'\n", id->valuestring);
+  printf("L_01: '%d'\n", L_01->valueint);
+  printf("L_02: '%d'\n", L_02->valueint);
+  printf("AC: '%d'\n", AC->valueint);
+  printf("PR: '%d'\n", PR->valueint);
+  printf("AL_BZ: '%d'\n", AL_BZ->valueint);
+  printf("SPres: '%d'\n", SPres->valueint);
+  printf("SFum: '%d'\n", SFum->valueint);
+  printf("SJan: '%d'\n", SJan->valueint);
+  printf("SPor: '%d'\n", SPor->valueint);
+  printf("SC_IN: '%d'\n", SC_IN->valueint);
+  printf("SC_OUT: '%d'\n", SC_OUT->valueint);
+  printf("DHT22: '%d'\n", DHT22->valueint);
+
+  /*---------------- Termina JSON ----------------------*/
+
+  /* 4. Transfere dado do buffer pra variável do comando */
+  sscanf(buffer, "%d", &command);
+
+  /* 5. Trata os sensores */
+  trataSensores(command);
 }
 
 
 
 void* recebeDistribuido() {
-  
   /* 1. Cria variáveis necessárias para o socket */
   int socketServidor; // Descritor do arquivo - servidor
 	int socketCliente; // Descritor do arquivo - cliente
@@ -71,12 +130,12 @@ void* recebeDistribuido() {
 	while(1) {
 
     /* 7. Cria conexão de socket com o cliente para aceitar mensagens */
-		clienteLen = sizeof(clienteAddr);
-		if((socketCliente = accept(socketServidor, (struct sockaddr *) &clienteAddr, &clienteLen)) < 0)
+		clienteLen = sizeof(addrCliente);
+		if((socketCliente = accept(socketServidor, (struct sockaddr *) &addrCliente, &clienteLen)) < 0)
 			printf("Falha no Accept\n");
 		
     /* 8. Printa o endereço do cliente*/
-		printf("Conexão do Cliente %s\n", inet_ntoa(clienteAddr.sin_addr));
+		printf("Conexão do Cliente %s\n", inet_ntoa(addrCliente.sin_addr));
 		
     /* 9. Chama função de tratamento do cliente (possui um loop infinito) */
 		TrataClienteTCP(socketCliente);
@@ -87,47 +146,6 @@ void* recebeDistribuido() {
 
   /* 11. Fecha conexão do próprio socket do servidor */
 	close(socketServidor);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  while (1) {
-	  unsigned int len = sizeof(client);
-	  int clientid = accept(serverid, (struct sockaddr*) &client, &len);
-
-    printf("Conexão do Cliente %s\n", inet_ntoa(client.sin_addr));
-    char buffer[16];
-	  int size = recv(clientid, buffer, 16, 0);
-
-    if (size < 0) {
-      exit(0);
-    }
-    
-    buffer[15] = '\0';
-
-		int command;
-		sscanf(buffer, "%d", &command);
-
-    trataSensores(command);
-		
-		close(clientid);
-  }
-
-	close(serverid);
 }
 
 // }

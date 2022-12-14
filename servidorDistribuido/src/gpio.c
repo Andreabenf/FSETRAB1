@@ -1,6 +1,62 @@
 #include "gpio.h"
 #include "comunicacao.h"
+#include "cJSON.h"
 
+StatusGeral geral;
+const char *printcofing()
+{
+  const cJSON *id = NULL;
+  const cJSON *L_01 = NULL;
+  const cJSON *L_02 = NULL;
+  const cJSON *AC = NULL;
+  const cJSON *PR = NULL;
+  const cJSON *AL_BZ = NULL;
+  const cJSON *SPres = NULL;
+  const cJSON *SFum = NULL;
+  const cJSON *SJan = NULL;
+  const cJSON *SPor = NULL;
+  const cJSON *SC_IN = NULL;
+  const cJSON *SC_OUT = NULL;
+  const cJSON *DHT22 = NULL;
+
+  cJSON *body = cJSON_CreateObject();
+
+  id = cJSON_CreateString(geral.id);
+  L_01 = cJSON_CreateNumber(geral.L_01);
+  L_02 = cJSON_CreateNumber(geral.L_02);
+  AC = cJSON_CreateNumber(geral.AC);
+  PR = cJSON_CreateNumber(geral.PR);
+  AL_BZ = cJSON_CreateNumber(geral.AL_BZ);
+  SPres = cJSON_CreateNumber(geral.SPres);
+  SFum = cJSON_CreateNumber(geral.SFum);
+  SJan = cJSON_CreateNumber(geral.SJan);
+  SPor = cJSON_CreateNumber(geral.SPor);
+  SC_IN = cJSON_CreateNumber(geral.SC_IN);
+  SC_OUT = cJSON_CreateNumber(geral.SC_OUT);
+  DHT22 = cJSON_CreateNumber(geral.DHT22);
+
+  cJSON_AddItemToObject(body, "id", id);
+  cJSON_AddItemToObject(body, "L_01", L_01);
+  cJSON_AddItemToObject(body, "L_02", L_02);
+  cJSON_AddItemToObject(body, "AC", AC);
+  cJSON_AddItemToObject(body, "PR", PR);
+  cJSON_AddItemToObject(body, "AL_BZ", AL_BZ);
+  cJSON_AddItemToObject(body, "SPres", SPres);
+  cJSON_AddItemToObject(body, "SFum", SFum);
+  cJSON_AddItemToObject(body, "SJan", SJan);
+  cJSON_AddItemToObject(body, "SPor", SPor);
+  cJSON_AddItemToObject(body, "SC_IN", SC_IN);
+  cJSON_AddItemToObject(body, "SC_OUT", SC_OUT);
+  cJSON_AddItemToObject(body, "DHT22", DHT22);
+
+
+  char *finaltring = cJSON_Print(body);
+  // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
+  //         geral.id, geral.L_01, geral.L_02, geral.AC, geral.PR, geral.AL_BZ, geral.SPres, geral.SFum, geral.SJan, geral.SPor, geral.SC_IN, geral.SC_OUT, geral.DHT22);
+  // //  printf("%s", finaltring);
+
+  return finaltring;
+}
 void ativaDesativaDispositivo(int item, int status)
 {
   // used to set a device, such as a lamp, on or off
@@ -15,9 +71,12 @@ void SensorPresenca(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SPres;
   int estado = digitalRead(pin);
+  geral.SPres = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Presença acionado\n");
     printf("Presença acionado\n");
   }
   else
@@ -31,9 +90,12 @@ void SensorFumaca(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SFum;
   int estado = digitalRead(pin);
+  geral.SFum = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Fumaça detectada\n");
     printf("Fumaça detectada\n");
   }
   else
@@ -47,9 +109,12 @@ void Janela1(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SJan;
   int estado = digitalRead(pin);
+  geral.SJan = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Janela 1! abriu\n");
     printf("Janela 1! abriu\n");
   }
   else
@@ -63,9 +128,12 @@ void Janela2(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SPor;
   int estado = digitalRead(pin);
+  geral.SPor = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Janela 2! abriu\n");
     printf("Janela 2! abriu\n");
   }
   else
@@ -79,9 +147,12 @@ void SensorEntrada(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SC_IN;
   int estado = digitalRead(pin);
+  geral.SC_IN = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Entrou!\n");
     printf("Entrou!\n");
   }
   else
@@ -94,9 +165,12 @@ void SensorSaida(void)
   JSONConfig configjson = getConfig();
   int pin = configjson.SC_OUT;
   int estado = digitalRead(pin);
+  geral.SC_OUT = estado;
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
   if (estado)
   {
-    enviaCentral("Saiu");
     printf("Saiu!\n");
   }
   else
@@ -170,7 +244,20 @@ void *handleGPIO()
 
 void desativaDispositivos()
 {
-
+  JSONConfig configjson = getConfig();
+  strcpy(geral.id, configjson.id);
+  geral.L_01 = 0;
+  geral.L_02 = 0;
+  geral.AC = 0;
+  geral.PR = 0;
+  geral.AL_BZ = 0;
+  geral.SPres = 0;
+  geral.SFum = 0;
+  geral.SJan = 0;
+  geral.SPor = 0;
+  geral.SC_IN = 0;
+  geral.SC_OUT = 0;
+  geral.DHT22 = 0;
   int *portasDispositivosSaida = getDispositivosSaida();
   int qtdeDispositivosSaida = getQtdeDispositivosSaida();
   int wiringPIpin;

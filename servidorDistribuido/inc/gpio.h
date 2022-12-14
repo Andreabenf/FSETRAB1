@@ -8,6 +8,23 @@
 #include "leJSON.h"
 
 
+typedef struct statusgeral {
+char id[25];
+int L_01;
+int L_02;
+int AC;
+int PR;
+int AL_BZ;
+int SPres;
+int SFum;
+int SJan;
+int SPor;
+int SC_IN;
+int SC_OUT;
+int DHT22;
+}StatusGeral;
+
+
 void ativaDesativaDispositivo(int item, int status);
 void desativaDispositivos();
 void* handleGPIO(); //handle sensor state changes

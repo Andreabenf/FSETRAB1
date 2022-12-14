@@ -10,6 +10,21 @@ typedef struct {
 #define SERVER_CENTRAL_PORT 10030
 #define SERVER_DISTRIBUTED_PORT 11130
 
+typedef struct statusgeral {
+  char id[25];
+  int L_01;
+  int L_02;
+  int AC;
+  int PR;
+  int AL_BZ;
+  int SPres;
+  int SFum;
+  int SJan;
+  int SPor;
+  int SC_IN;
+  int SC_OUT;
+  int DHT22;
+} StatusGeral;
 
 void acionaDistribuido();
 void *recebeDistribuido();
