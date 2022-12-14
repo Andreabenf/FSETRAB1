@@ -78,14 +78,18 @@ void* recebeCentral(void *porta) {
 
     // 2 means temperature and humidity reading
     if (command == 2) {
-      printf("Coletando dados de temperatura e humidade\n");
-      char buf[16];
-      snprintf(buf, 16, "%d %4.2f %4.2f", 2, leTemperatura(),leUmidade());
-      int size = strlen(buf);
-      printf("Enviando dados de temperatura e humidade para o servidor central\n");
-      if (send(clientid, buf, size, 0) != size) {
-        printf("Error: Send failed\n");
-      }
+      printf("Coletando dadossss de temperatura e humidade\n");
+      while(1){
+
+      read_dht_data();
+      };
+      // char buf[16];
+      // snprintf(buf, 16, "%d %4.2f %4.2f", 2, leTemperatura(),leUmidade());
+      // int size = strlen(buf);
+      // printf("Enviando dados de temperatura e humidade para o servidor central\n");
+      // if (send(clientid, buf, size, 0) != size) {
+      //   printf("Error: Send failed\n");
+      // }
     }
     // TrataClienteTCP(clientid);
 		close(clientid);
@@ -106,7 +110,7 @@ void enviaCentral(char *message) {
   }
 
   client.sin_family = AF_INET;
-  client.sin_addr.s_addr = inet_addr("127.0.0.1");
+  client.sin_addr.s_addr = inet_addr("192.168.1.133");
   client.sin_port = htons(11130);
 
   while(connect(socketid, (struct sockaddr*) &client, sizeof(client)) < 0){

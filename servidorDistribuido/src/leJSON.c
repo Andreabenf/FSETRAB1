@@ -15,7 +15,7 @@ int qtdeDispositivosSaida;
 int dispositivosSaida[5];
 
 
-JSONConfig leJSONConfig(const char* nomeArquivo) {
+JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
 
 
     const cJSON *item = NULL;
@@ -39,17 +39,17 @@ JSONConfig leJSONConfig(const char* nomeArquivo) {
         }
         return config;
     }
-
+    config.portaDistribuido= minhaporta;
     nomeAndar = cJSON_GetObjectItemCaseSensitive(live_info, "nome");
     printf("Analisando \"%s\"\n", nomeAndar->valuestring);
     cJSON *ip_json = cJSON_GetObjectItemCaseSensitive(live_info, "ip_servidor_central");
     strcpy(config.ipCentral, ip_json->valuestring);
 
-    cJSON *porta_json = cJSON_GetObjectItemCaseSensitive(live_info, "porta_servidor_distribuido");
-    config.portaDistribuido = porta_json->valueint;
-
-    printf("IP: %s e Porta: %d\n", config.ipCentral, config.portaDistribuido);
-// printf("%s", cJSON_Print(live_info));
+    cJSON *ip_serv_dist = cJSON_GetObjectItemCaseSensitive(live_info, "ip_servidor_distribuido");
+    char str[10];
+    sprintf(str, "%s:%d",ip_serv_dist->valuestring, minhaporta);
+    strcpy(config.id, str);
+    printf("IP: %s e Porta: %s\n", config.ipCentral, config.id);
     inputs = cJSON_GetObjectItemCaseSensitive(live_info, "inputs");
 
     qtdeDispositivosEntrada = 0;

@@ -29,13 +29,13 @@ void encerraPrograma() {
     exit(0);
 }
 
-void inicializaPrograma(const char * filename) {
+void inicializaPrograma(const char * filename, const int minhaporta) {
 
     if (wiringPiSetup() == -1) {
 		printf("Failed to initialize wiringPi\n");
 		exit(1);
     }
-    configs = leJSONConfig(filename);
+    configs = leJSONConfig(filename, minhaporta);
 
     desativaDispositivos();
 }
@@ -49,14 +49,14 @@ int main(int argc, const char * argv[]) {
    signal(SIGINT, trata_SIGINT);
 
     if (argc >= 2){
-		inicializaPrograma(argv[1]);
+		inicializaPrograma(argv[1], atoi(argv[2]));
 	}
 	else{
 		printf("O arquivo de configuracao precisa ser passado como parametro\n");
 		return -1;
 	}
-    printf("busco amigos");
     int porta = getPorta();
+    printf("busco amigos %d", porta);
 
     pthread_create(&comunicacao, NULL, recebeCentral, &porta);
     pthread_create(&gpio, NULL, handleGPIO, NULL);

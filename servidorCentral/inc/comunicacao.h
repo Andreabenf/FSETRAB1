@@ -6,7 +6,7 @@ typedef struct {
   float humidity;
 } DHT22;
 
-#define SERVER_DISTRIBUTED_IP "127.0.0.1"
+#define SERVER_DISTRIBUTED_IP "192.168.1.133"
 #define SERVER_CENTRAL_PORT 10030
 #define SERVER_DISTRIBUTED_PORT 11130
 

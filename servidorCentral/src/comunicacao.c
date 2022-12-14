@@ -20,28 +20,96 @@
 #include "comunicacao.h"
 #include "menu.h"
 
-  void* recebeDistribuido() {
+void TrataClienteTCP(int socketCliente) {
+	char buffer[16];
+	int tamanhoRecebido;
 
-  struct sockaddr_in server, client;
+	if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+		printf("Erro no recv()\n");
 
-	int serverid = socket(AF_INET, SOCK_STREAM, 0);
-
-	memset(&server, '0', sizeof(server));
-
-	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = htonl(INADDR_ANY);
-	server.sin_port = htons(11130);
-
-	bind(serverid, (struct sockaddr*) &server, sizeof(server));
-
-	if (listen(serverid, 10) == -1) {
-    exit(0);
+	while (tamanhoRecebido > 0) {
+		if(send(socketCliente, buffer, tamanhoRecebido, 0) != tamanhoRecebido)
+			printf("Erro no envio - send()\n");
+		
+		if((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+			printf("Erro no recv()\n");
 	}
+}
+
+
+
+void* recebeDistribuido() {
+  
+  /* 1. Cria variáveis necessárias para o socket */
+  int socketServidor; // Descritor do arquivo - servidor
+	int socketCliente; // Descritor do arquivo - cliente
+	struct sockaddr_in addrServidor; // Struct de endereço - servidor
+	struct sockaddr_in addrCliente; // Struct de endereço - cliente
+	unsigned short portaServidor = 11130; // Endereço de Porta do Servidor
+	unsigned int clienteLen; // Tamanho do Endereço do cliente
+  int maxClientes = 10; // Máximo de Clientes até que uma conexão seja rejeitada
+
+  /* 2. Abrir o Socket (Criar a pilha de dados) */
+  if((socketServidor = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+	  printf("falha no socker do Servidor\n");
+
+  /* 3. Montar a estrutura sockaddr_in (Definir o endereço, como porta e IP)*/
+  memset(&addrServidor, 0, sizeof(addrServidor)); // Zerando a estrutura de dados
+  addrServidor.sin_family = AF_INET;
+  addrServidor.sin_addr.s_addr = htonl(INADDR_ANY);
+  addrServidor.sin_port = htons(portaServidor);
+
+  /* 4. Realizar o bind (associar o endereço ao socket em si)*/
+	if(bind(socketServidor, (struct sockaddr *) &addrServidor, sizeof(addrServidor)) < 0)
+		printf("Falha no Bind\n");
+
+  /* 5. Implementar o listen (começar a receber dados no IP e porta via socket)*/
+  if(listen(socketServidor, maxClientes) < 0) 
+		printf("Falha no Listen\n");
+
+  /* 6. Começa o loop para escutar/receber as mensagens no socket */
+	while(1) {
+
+    /* 7. Cria conexão de socket com o cliente para aceitar mensagens */
+		clienteLen = sizeof(clienteAddr);
+		if((socketCliente = accept(socketServidor, (struct sockaddr *) &clienteAddr, &clienteLen)) < 0)
+			printf("Falha no Accept\n");
+		
+    /* 8. Printa o endereço do cliente*/
+		printf("Conexão do Cliente %s\n", inet_ntoa(clienteAddr.sin_addr));
+		
+    /* 9. Chama função de tratamento do cliente (possui um loop infinito) */
+		TrataClienteTCP(socketCliente);
+
+    /* 10. Fecha conexão de socket com o cliente */
+		close(socketCliente);
+	}
+
+  /* 11. Fecha conexão do próprio socket do servidor */
+	close(socketServidor);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   while (1) {
 	  unsigned int len = sizeof(client);
 	  int clientid = accept(serverid, (struct sockaddr*) &client, &len);
 
+    printf("Conexão do Cliente %s\n", inet_ntoa(client.sin_addr));
     char buffer[16];
 	  int size = recv(clientid, buffer, 16, 0);
 

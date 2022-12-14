@@ -3,7 +3,8 @@
 
 typedef struct jsonconf {
     int portaDistribuido;
-    char ipCentral[13];
+    char ipCentral[230];
+    char id[230];
 int SPres;
 int SFum;
 int SJan;
@@ -15,7 +16,7 @@ int SC_OUT;
 
 
 
-JSONConfig leJSONConfig(const char* nomeArquivo);
+JSONConfig leJSONConfig(const char* nomeArquivo, const int minhaporta);
 int *getDispositivosEntrada();
 int getQtdeDispositivosEntrada();
 int getQtdeDispositivosSaida();
