@@ -11,9 +11,9 @@
 
 
 void atualizaDispositivo(int dispNum, int novoStatus, int serv){
-  unsigned short int porta = serv ? 11130 : 11130;
-  printf("recebo");
-  enviaDistribuido(dispNum, novoStatus, porta);
+  unsigned short int porta = serv ? 10121 : 10121;
+  printf("aqui\n");
+  enviaDistribuido(1,1,1);
 }
 
 char * verificaOnOff(int estadoSensorAparelho) {
@@ -29,7 +29,10 @@ Aparelhos aparalhos;
 
 void mostraMenu() {
 
-    printf(" ----- STATUS DAS ENTRADAS -----\n\n");
+    int i;
+    StatusGeral* dis = getDispositivos();
+    printf(" ----- STATUS DAS ENTRADAS %d -----\n\n", getNumDispositivos());
+    // printf(" ----- STATUS DAS ENTRADAS %s -----\n\n", dis[0].id);
 
     printf(" -- ANDAR TERREO --\n");
     printf("  Sensor de presenca: %s\n", verificaOnOff(sensores.presencaTerreo));
@@ -64,10 +67,11 @@ void mostraMenu() {
     printf("       7   | Lampada corredor: %s\n", verificaOnOff(aparalhos.lampadaCorrAndar));
     printf("       8   | Ar-condicionado: %s\n", verificaOnOff(aparalhos.arCondicionadoAndar));
 
+scanf("%d",&i);
+
 }
 
 void menuAtivaDesativa() {
-    system("clear");
 
     printf("\n  Qual dos dispositivos deseja ativar/desativar? Digite o código respectivo\n\n");
     printf("   CODIGO   |     DISPOSITIVO     |   STATUS ATUAL\n");
@@ -89,55 +93,57 @@ void menuAtivaDesativa() {
     printf("     8      | Ar-condicionado:    |      %s\n", verificaOnOff(aparalhos.arCondicionadoAndar));
 
     
-    __fpurge(stdin);
-    char comando = getchar();
 
-    if(comando == '0') {
+     int comando=-1; 
+     scanf("%d\n",&comando);
+     printf("%d",comando);
+
+    if(comando == 0) {
         printf("COMANDO 0\n");
         aparalhos.lampadaT01 = !aparalhos.lampadaT01;
         atualizaDispositivo(4,aparalhos.lampadaT01,0);
     } 
-    else if(comando == '1') {
+    else if(comando == 1) {
         printf("COMANDO 1\n");
-        aparalhos.lampadaT02 = !aparalhos.lampadaT02;
+        //aparalhos.lampadaT02 = !aparalhos.lampadaT02;
         atualizaDispositivo(17,aparalhos.lampadaT02,0);
     }
-    else if(comando == '2') {
+    else if(comando == 2) {
         printf("COMANDO 2\n");
         aparalhos.lampadaCorrTerreo = !aparalhos.lampadaCorrTerreo;
         atualizaDispositivo(27,aparalhos.lampadaCorrTerreo,0);
     }
-    else if(comando == '3') {
+    else if(comando == 3) {
         printf("COMANDO 3\n");
         aparalhos.arCondicionadoTerreo = !aparalhos.arCondicionadoTerreo;
         atualizaDispositivo(7,aparalhos.arCondicionadoTerreo,0);
     }
-    else if(comando == '4') {
+    else if(comando == 4) {
         printf("COMANDO 4\n");
         aparalhos.aspersores = !aparalhos.aspersores;
         atualizaDispositivo(16,aparalhos.aspersores,0);
     }
-    else if(comando == '5') {
+    else if(comando == 5) {
         printf("COMANDO 5\n");
         aparalhos.lampada101 = !aparalhos.lampada101;
         atualizaDispositivo(22,aparalhos.lampada101,1);
     }
-    else if(comando == '6') {
+    else if(comando == 6) {
         printf("COMANDO 6\n");
         aparalhos.lampada102 = !aparalhos.lampada102;
         atualizaDispositivo(25,aparalhos.lampada102,1);
     }
-    else if(comando == '7') {
+    else if(comando == 7) {
         printf("COMANDO 7\n");
         aparalhos.lampadaCorrAndar = !aparalhos.lampadaCorrAndar;
         atualizaDispositivo(8,aparalhos.lampadaCorrAndar,1);
     }
-    else if(comando == '8') {
+    else if(comando == 8) {
         printf("COMANDO 8\n");
         aparalhos.arCondicionadoAndar = !aparalhos.arCondicionadoAndar;
         atualizaDispositivo(12,aparalhos.arCondicionadoAndar,1);
     }
-    else if(comando == '9') {
+    else if(comando == 9) {
         printf("COMANDO 9\n");
     }
     else {
@@ -145,7 +151,6 @@ void menuAtivaDesativa() {
         // __fpurge(stdin);
         // getchar();
         sleep(2);
-        system("clear");
 
     }
 }
@@ -157,18 +162,18 @@ void trata_SIGTSTP(int signum) {
 }
 
 void* menuFunc() {
-    signal(SIGTSTP, trata_SIGTSTP);
-    system("clear");
-    while(1) {
+    // signal(SIGTSTP, trata_SIGTSTP);
+    // system("clear");
+    int menuon = 1;
+    do{
         mostraMenu();
-        printf("jorge");
-        sleep(200);
-        printf("jorges");
+        // printf("jorge");
+        // sleep(200);
+        // printf("jorges");
 
         // leTempUmidade();
         __fpurge(stdin);
-
-    }
+    }while(menuon);
 
 }
 
