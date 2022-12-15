@@ -65,24 +65,49 @@ const char *printcofing()
 void ativaDesativaDispositivo(const char *str)
 {
   JSONConfig configjson = getConfig();
-  printf("aqui chegou assi: %s\n\n",str);
+  printf("aqui chegou assi: %s\n\n", str);
+  int estado;
   int pin;
   if (strcmp(str, "L_01") == 0)
+  {
+
     pin = configjson.L_01;
+    estado = digitalRead(pin);
+    geral.L_01=!estado;
+  }
   if (strcmp(str, "L_02") == 0)
+  {
     pin = configjson.L_02;
+    estado = digitalRead(pin);
+    geral.L_02=!estado;
+  }
   if (strcmp(str, "AC") == 0)
+  {
     pin = configjson.AC;
+    estado = digitalRead(pin);
+    geral.AC=!estado;
+  }
   if (strcmp(str, "PR") == 0)
+  {
     pin = configjson.PR;
+    estado = digitalRead(pin);
+    geral.PR=!estado;
+  }
   if (strcmp(str, "AL_BZ") == 0)
+  {
     pin = configjson.AL_BZ;
+    estado = digitalRead(pin);
+    geral.AL_BZ=!estado;
+  }
 
-  int estado = digitalRead(pin);
   printf("Alterando estado da gpio %d\n", pin);
-
   pinMode(pin, OUTPUT);
   digitalWrite(pin, !estado);
+
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
+
 }
 
 void SensorPresenca(void)

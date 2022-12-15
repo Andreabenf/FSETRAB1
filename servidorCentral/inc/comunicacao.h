@@ -8,7 +8,6 @@ typedef struct {
 
 #define SERVER_DISTRIBUTED_IP "192.168.1.103"
 #define SERVER_CENTRAL_PORT 11130
-#define SERVER_DISTRIBUTED_PORT 10121
 
 typedef struct statusgeral {
   char id[25];
@@ -24,13 +23,17 @@ typedef struct statusgeral {
   int SC_IN;
   int SC_OUT;
   int DHT22;
+  char IP[15];
+  int PORTA;
 } StatusGeral;
 
 void acionaDistribuido();
 void *recebeDistribuido();
 void leTempUmidade();
-int enviaDistribuido(int item, int status, unsigned short int porta);
+int enviaDistribuido(int item, const char* str);
 StatusGeral *getDispositivos();
 int getNumDispositivos();
+StatusGeral getDispositivo(int num);
+char * verificaOnOff(int estadoSensorAparelho);
 
 #endif /* COMUNICACAO_H_ */

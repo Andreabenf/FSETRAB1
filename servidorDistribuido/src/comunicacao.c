@@ -17,7 +17,7 @@ void *recebeCentral(void *porta)
 
   int serverid = socket(AF_INET, SOCK_STREAM, 0);
 
-  memset(&server, '0', sizeof(server));
+  memset(&server, 0, sizeof(server));
 
   server.sin_family = AF_INET;
   server.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -36,8 +36,11 @@ void *recebeCentral(void *porta)
     unsigned int len = sizeof(client);
     int clientid = accept(serverid, (struct sockaddr *)&client, &len);
 
-    char buffer[6];
-    int size = recv(clientid, buffer, 6, 0);
+    char buffer[8];
+    buffer[0]=0;
+    printf("mensagemrecebida: '%s'\n", buffer);
+
+    int size = recv(clientid, buffer, 8, 0);
 
     if (size < 0)
     {
@@ -49,6 +52,7 @@ void *recebeCentral(void *porta)
 
     ativaDesativaDispositivo(buffer);
     close(clientid);
+    strcpy(buffer, "");
   }
 
   close(serverid);

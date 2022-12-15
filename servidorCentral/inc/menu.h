@@ -33,8 +33,6 @@ typedef struct sensuaires {
 void* menuFunc();
 void mostraMenu();
 void menuAtivaDesativa();
-void atualizaDispositivo(int dispNum, int novoStatus, int serv);
-void trataSensores(int comando);
 
 
 

@@ -9,169 +9,79 @@
 #include "comunicacao.h"
 
 
-
-void atualizaDispositivo(int dispNum, int novoStatus, int serv){
-  unsigned short int porta = serv ? 10121 : 10121;
-  printf("aqui\n");
-  enviaDistribuido(1,1,1);
-}
-
-
-
 Sensores sensores;
 Aparelhos aparalhos;
 
-void mostraMenu() {
+void mostraMenu()
+{
 
-system("clear");
-  int i;
-   printaDispositivos();
-
-    
-
-
+  // system("clear");
+  printaDispositivos();
 }
 
-void menuAtivaDesativa() {
+void menuAtivaDesativa()
+{
 
+  // system("clear");
+  int i = -1;
+  do
+  {
+    printf("Qual sala deseja controlar?\nDigite um numero de 0 a %d\n", getNumDispositivos() - 1);
+    scanf("%d", &i);
+
+  } while (i < 0 || i > getNumDispositivos() - 1);
+
+  StatusGeral chosen = getDispositivo(i);
+
+  char comando[7];
+  int scan = 1;
+  do
+  {
+    system("clear");
     printf("\n  Qual dos dispositivos deseja ativar/desativar? Digite o código respectivo\n\n");
     printf("   CODIGO   |     DISPOSITIVO     |   STATUS ATUAL\n");
     printf("------------|---------------------|------------------\n");
-    printf("                    TERREO       \n");
+    printf("                    SALA  %d      \n", i);
     printf("------------|---------------------|------------------\n");
-    printf("     0      | Lampada sala T01    |      %s\n", verificaOnOff(aparalhos.lampadaT01));
-    printf("     1      | Lampada sala T02    |      %s\n", verificaOnOff(aparalhos.lampadaT02));
-    printf("     2      | Lampada corredor    |      %s\n", verificaOnOff(aparalhos.lampadaCorrTerreo));
-    printf("     3      | Ar-condicionado     |      %s\n", verificaOnOff(aparalhos.arCondicionadoTerreo));
-    printf("     4      | Aspersores de água  |      %s\n", verificaOnOff(aparalhos.aspersores));
+    printf("     L_01   | Lâmpada 01 da Sala  |      %s\n", verificaOnOff(chosen.L_01));
+    printf("     L_02   | Lâmpada 02 da Sala  |      %s\n", verificaOnOff(chosen.L_02));
+    printf("     AC     | Ar-Condicionado     |      %s\n", verificaOnOff(chosen.AC));
+    printf("     PR     | Projetor Multimídia |      %s\n", verificaOnOff(chosen.PR));
+    printf("     AL_BZ  | Alarme              |      %s\n\n", verificaOnOff(chosen.AL_BZ));
 
-    printf("------------|---------------------|------------------\n");
-    printf("                    ANDAR 1    \n");
-    printf("------------|---------------------|------------------\n");
-    printf("     5      | Lampada sala 101:   |      %s\n", verificaOnOff(aparalhos.lampada101));
-    printf("     6      | Lampada sala 102:   |      %s\n", verificaOnOff(aparalhos.lampada102));
-    printf("     7      | Lampada corredor:   |      %s\n", verificaOnOff(aparalhos.lampadaCorrAndar));
-    printf("     8      | Ar-condicionado:    |      %s\n", verificaOnOff(aparalhos.arCondicionadoAndar));
+    scanf("%s", &comando);
+    if (strcmp(comando, "L_01") == 0 || strcmp(comando, "L_02") == 0 || strcmp(comando, "AC") == 0 || strcmp(comando, "PR") == 0 || strcmp(comando, "AL_BZ") == 0)
+    {
+      scan = 0;
+    }
 
-    
+    __fpurge(stdin);
+    printf("leu: %s\n\n",comando );
 
-     int comando=-1; 
-     scanf("%d\n",&comando);
-     printf("%d",comando);
-
-    if(comando == 0) {
-        printf("COMANDO 0\n");
-        aparalhos.lampadaT01 = !aparalhos.lampadaT01;
-        atualizaDispositivo(4,aparalhos.lampadaT01,0);
-    } 
-    else if(comando == 1) {
-        printf("COMANDO 1\n");
-        //aparalhos.lampadaT02 = !aparalhos.lampadaT02;
-        atualizaDispositivo(17,aparalhos.lampadaT02,0);
-    }
-    else if(comando == 2) {
-        printf("COMANDO 2\n");
-        aparalhos.lampadaCorrTerreo = !aparalhos.lampadaCorrTerreo;
-        atualizaDispositivo(27,aparalhos.lampadaCorrTerreo,0);
-    }
-    else if(comando == 3) {
-        printf("COMANDO 3\n");
-        aparalhos.arCondicionadoTerreo = !aparalhos.arCondicionadoTerreo;
-        atualizaDispositivo(7,aparalhos.arCondicionadoTerreo,0);
-    }
-    else if(comando == 4) {
-        printf("COMANDO 4\n");
-        aparalhos.aspersores = !aparalhos.aspersores;
-        atualizaDispositivo(16,aparalhos.aspersores,0);
-    }
-    else if(comando == 5) {
-        printf("COMANDO 5\n");
-        aparalhos.lampada101 = !aparalhos.lampada101;
-        atualizaDispositivo(22,aparalhos.lampada101,1);
-    }
-    else if(comando == 6) {
-        printf("COMANDO 6\n");
-        aparalhos.lampada102 = !aparalhos.lampada102;
-        atualizaDispositivo(25,aparalhos.lampada102,1);
-    }
-    else if(comando == 7) {
-        printf("COMANDO 7\n");
-        aparalhos.lampadaCorrAndar = !aparalhos.lampadaCorrAndar;
-        atualizaDispositivo(8,aparalhos.lampadaCorrAndar,1);
-    }
-    else if(comando == 8) {
-        printf("COMANDO 8\n");
-        aparalhos.arCondicionadoAndar = !aparalhos.arCondicionadoAndar;
-        atualizaDispositivo(12,aparalhos.arCondicionadoAndar,1);
-    }
-    else if(comando == 9) {
-        printf("COMANDO 9\n");
-    }
-    else {
-        printf("Comando inválido\nAperte 'ENTER' para tentar novamente.\n");
-        // __fpurge(stdin);
-        // getchar();
-        sleep(2);
-
-    }
-}
-
-void trata_SIGTSTP(int signum) {
-
-    menuAtivaDesativa();
+  } while (scan);
+enviaDistribuido(i,comando);
 
 }
 
-void* menuFunc() {
-    // signal(SIGTSTP, trata_SIGTSTP);
-    // system("clear");
-    int menuon = 1;
-    int i;
-    do{
-        mostraMenu();
-scanf("%d",&i);
-        
-        __fpurge(stdin);
-    }while(menuon);
 
-}
-
-void trataSensores(int comando) {
-  
-  switch (comando)
+void *menuFunc()
+{
+  int menuon = 1;
+  int i;
+  do
   {
-    case 1:
-      sensores.presencaAndar = !sensores.presencaAndar;
-      break;
-    case 2:
-      sensores.fumacaAndar = !sensores.fumacaAndar;
-      break;
-    case 3:
-      sensores.janela101 = !sensores.janela101;
-      break;
-    case 4:
-      sensores.janela102 = !sensores.janela102;
-      break;
-    case 5:
-      sensores.presencaTerreo = !sensores.presencaTerreo;
-      break;
-    case 6:
-      sensores.fumacaTerreo = !sensores.fumacaTerreo;
-      break;
-    case 7:
-      sensores.janelaT1 = !sensores.janelaT1;
-      break;
-    case 8:
-     sensores.janelaT2 = !sensores.janelaT2;
-      break;
-    case 9:
-      sensores.portaTerreo = !sensores.portaTerreo;
-      break;
-    case 10:
-      break;
-    case 11:
-      break;
-    default:
-      break;
-  }
+    mostraMenu();
+    __fpurge(stdin);
+    printf("Digite 1 para atualizar o quadro\n");
+    printf("Digite 2 para entrar no quadro de comandos\n");
+    scanf("%d", &i);
+    if (i == 2)
+    {
+      menuAtivaDesativa();
+    }
+    i = 0;
+
+    __fpurge(stdin);
+  } while (menuon);
 }
+
