@@ -18,10 +18,13 @@ const char *printcofing()
   const cJSON *SC_IN = NULL;
   const cJSON *SC_OUT = NULL;
   const cJSON *DHT22 = NULL;
+  const cJSON *IP = NULL;
+  const cJSON *PORTA = NULL;
 
   cJSON *body = cJSON_CreateObject();
 
   id = cJSON_CreateString(geral.id);
+  IP = cJSON_CreateString(geral.IP);
   L_01 = cJSON_CreateNumber(geral.L_01);
   L_02 = cJSON_CreateNumber(geral.L_02);
   AC = cJSON_CreateNumber(geral.AC);
@@ -34,6 +37,7 @@ const char *printcofing()
   SC_IN = cJSON_CreateNumber(geral.SC_IN);
   SC_OUT = cJSON_CreateNumber(geral.SC_OUT);
   DHT22 = cJSON_CreateNumber(geral.DHT22);
+  PORTA = cJSON_CreateNumber(geral.PORTA);
 
   cJSON_AddItemToObject(body, "id", id);
   cJSON_AddItemToObject(body, "L_01", L_01);
@@ -48,22 +52,37 @@ const char *printcofing()
   cJSON_AddItemToObject(body, "SC_IN", SC_IN);
   cJSON_AddItemToObject(body, "SC_OUT", SC_OUT);
   cJSON_AddItemToObject(body, "DHT22", DHT22);
-
+  cJSON_AddItemToObject(body, "PORTA", PORTA);
+  cJSON_AddItemToObject(body, "IP", IP);
 
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
   //         geral.id, geral.L_01, geral.L_02, geral.AC, geral.PR, geral.AL_BZ, geral.SPres, geral.SFum, geral.SJan, geral.SPor, geral.SC_IN, geral.SC_OUT, geral.DHT22);
-  // //  printf("%s", finaltring);
+  //  printf("%s", finaltring);
 
   return finaltring;
 }
-void ativaDesativaDispositivo(int item, int status)
+void ativaDesativaDispositivo(const char *str)
 {
-  // used to set a device, such as a lamp, on or off
-  printf("Alterando estado da gpio %d\n", item);
-  int wiringPIpin = item;
-  pinMode(wiringPIpin, OUTPUT);
-  digitalWrite(wiringPIpin, status);
+  JSONConfig configjson = getConfig();
+  printf("aqui chegou assi: %s\n\n",str);
+  int pin;
+  if (strcmp(str, "L_01") == 0)
+    pin = configjson.L_01;
+  if (strcmp(str, "L_02") == 0)
+    pin = configjson.L_02;
+  if (strcmp(str, "AC") == 0)
+    pin = configjson.AC;
+  if (strcmp(str, "PR") == 0)
+    pin = configjson.PR;
+  if (strcmp(str, "AL_BZ") == 0)
+    pin = configjson.AL_BZ;
+
+  int estado = digitalRead(pin);
+  printf("Alterando estado da gpio %d\n", pin);
+
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, !estado);
 }
 
 void SensorPresenca(void)
@@ -246,6 +265,7 @@ void desativaDispositivos()
 {
   JSONConfig configjson = getConfig();
   strcpy(geral.id, configjson.id);
+  strcpy(geral.IP, configjson.IP);
   geral.L_01 = 0;
   geral.L_02 = 0;
   geral.AC = 0;
@@ -258,6 +278,7 @@ void desativaDispositivos()
   geral.SC_IN = 0;
   geral.SC_OUT = 0;
   geral.DHT22 = 0;
+  geral.PORTA = configjson.PORTA;
   int *portasDispositivosSaida = getDispositivosSaida();
   int qtdeDispositivosSaida = getQtdeDispositivosSaida();
   int wiringPIpin;

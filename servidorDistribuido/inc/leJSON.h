@@ -11,6 +11,13 @@ int SJan;
 int SPor;
 int SC_IN;
 int SC_OUT;
+int L_01;
+int L_02;
+int AC;
+int PR;
+int AL_BZ;
+char IP[15];
+int PORTA;
     
 } JSONConfig;
 

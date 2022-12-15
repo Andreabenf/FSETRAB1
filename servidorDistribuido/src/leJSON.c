@@ -49,6 +49,8 @@ JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
     char str[10];
     sprintf(str, "%s:%d",ip_serv_dist->valuestring, minhaporta);
     strcpy(config.id, str);
+    config.PORTA=minhaporta;
+    strcpy(config.IP,ip_serv_dist->valuestring);
     printf("IP: %s e Porta: %s\n", config.ipCentral, config.id);
     inputs = cJSON_GetObjectItemCaseSensitive(live_info, "inputs");
 
@@ -96,6 +98,7 @@ JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
 
         cJSON *tag = cJSON_GetObjectItemCaseSensitive(item, "tag");
         cJSON *gpio = cJSON_GetObjectItemCaseSensitive(item, "gpio");
+        cJSON *sigla = cJSON_GetObjectItemCaseSensitive(item, "sigla");
 
         printf("%s na gpio %d\n", tag->valuestring, gpio->valueint);
 
@@ -103,6 +106,23 @@ JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
 
         dispositivosSaida[qtdeDispositivosSaida] = gpio->valueint;
         qtdeDispositivosSaida += 1;
+
+        if(strcmp(sigla->valuestring,"L_01")==0)
+           config.L_01 = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"L_02")==0)
+           config.L_02 = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"AC")==0)
+           config.AC = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"PR")==0)
+           config.PR = gpio->valueint;
+
+        if(strcmp(sigla->valuestring,"AL_BZ")==0)
+           config.AL_BZ = gpio->valueint;
+           
+        
     }
 
 

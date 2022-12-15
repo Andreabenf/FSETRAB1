@@ -22,10 +22,12 @@ int SPor;
 int SC_IN;
 int SC_OUT;
 int DHT22;
+char IP[15];
+int PORTA;
 }StatusGeral;
 
 
-void ativaDesativaDispositivo(int item, int status);
+void ativaDesativaDispositivo(const char* str);
 void desativaDispositivos();
 void* handleGPIO(); //handle sensor state changes
 
