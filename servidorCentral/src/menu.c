@@ -16,58 +16,19 @@ void atualizaDispositivo(int dispNum, int novoStatus, int serv){
   enviaDistribuido(1,1,1);
 }
 
-char * verificaOnOff(int estadoSensorAparelho) {
-    if(estadoSensorAparelho == 1)
-        return "ON";
-    else
-        return "OFF";
 
-}
 
 Sensores sensores;
 Aparelhos aparalhos;
 
 void mostraMenu() {
 
-    int i;
-    StatusGeral* dis = getDispositivos();
-    printf(" ----- STATUS DAS ENTRADAS %d -----\n\n", getNumDispositivos());
-    // printf(" ----- STATUS DAS ENTRADAS %s -----\n\n", dis[0].id);
+system("clear");
+  int i;
+   printaDispositivos();
 
-    printf(" -- ANDAR TERREO --\n");
-    printf("  Sensor de presenca: %s\n", verificaOnOff(sensores.presencaTerreo));
-    printf("  Sensor de fumaca: %s\n", verificaOnOff(sensores.fumacaTerreo));
-    printf("  Sensor janela T01: %s\n", verificaOnOff(sensores.janelaT1));
-    printf("  Sensor janela T02: %s\n", verificaOnOff(sensores.janelaT2));
-    printf("  Sensor porta de entrada: %s\n", verificaOnOff(sensores.portaTerreo));
-    printf("  Sensor de contagem de pessoas entrando:\n");
-    printf("  Sensor de contagem de pessoas saindo:\n");
+    
 
-    printf(" -- ANDAR 1 --\n");
-    printf("  Sensor de presenca: %s\n", verificaOnOff(sensores.presencaAndar));
-    printf("  Sensor de fumaca: %s\n", verificaOnOff(sensores.fumacaAndar));
-    printf("  Sensor janela 101: %s\n", verificaOnOff(sensores.janela101));
-    printf("  Sensor janela 102: %s\n", verificaOnOff(sensores.janela102));
-    printf("  Sensor de contagem de pessoas entrando:\n");
-    printf("  Sensor de contagem de pessoas saindo:\n");
-
-
-    printf(" ----- STATUS DAS SAIDAS -----\n\n");
-
-    printf(" -- Codigo | ANDAR TERREO\n");
-    printf("       0   | Lampada sala T01: %s\n", verificaOnOff(aparalhos.lampadaT01));
-    printf("       1   | Lampada sala T02: %s\n", verificaOnOff(aparalhos.lampadaT02));
-    printf("       2   | Lampada corredor: %s\n", verificaOnOff(aparalhos.lampadaCorrTerreo));
-    printf("       3   | Ar-condicionado: %s\n", verificaOnOff(aparalhos.arCondicionadoTerreo));
-    printf("       4   | Aspersores de água: %s\n", verificaOnOff(aparalhos.aspersores));
-
-    printf(" -- Codigo | ANDAR 1\n");
-    printf("       5   | Lampada sala 101: %s\n", verificaOnOff(aparalhos.lampada101));
-    printf("       6   | Lampada sala 102: %s\n", verificaOnOff(aparalhos.lampada102));
-    printf("       7   | Lampada corredor: %s\n", verificaOnOff(aparalhos.lampadaCorrAndar));
-    printf("       8   | Ar-condicionado: %s\n", verificaOnOff(aparalhos.arCondicionadoAndar));
-
-scanf("%d",&i);
 
 }
 
@@ -165,13 +126,11 @@ void* menuFunc() {
     // signal(SIGTSTP, trata_SIGTSTP);
     // system("clear");
     int menuon = 1;
+    int i;
     do{
         mostraMenu();
-        // printf("jorge");
-        // sleep(200);
-        // printf("jorges");
-
-        // leTempUmidade();
+scanf("%d",&i);
+        
         __fpurge(stdin);
     }while(menuon);
 

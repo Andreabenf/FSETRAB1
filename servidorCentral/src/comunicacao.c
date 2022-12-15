@@ -23,17 +23,20 @@
 StatusGeral dispositivos[10];
 int num_dispositivos = 0;
 
-StatusGeral* getDispositivos()
-{
 
-  return dispositivos;
-}
 int getNumDispositivos()
 {
 
   return num_dispositivos;
 }
 
+char * verificaOnOff(int estadoSensorAparelho) {
+    if(estadoSensorAparelho == 1)
+        return "ON ";
+    else
+        return "OFF";
+
+}
 void TrataClienteTCP(int socketCliente)
 {
   /* 1. Declara variáveis para tratamento do cliente */
@@ -88,11 +91,11 @@ void TrataClienteTCP(int socketCliente)
   // }
 
   // printf("id: '%s'\n", id->valuestring);
-  // printf("L_01: '%d'\n", L_01->valueint);
-  // printf("L_02: '%d'\n", L_02->valueint);
-  // printf("AC: '%d'\n", AC->valueint);
-  // printf("PR: '%d'\n", PR->valueint);
-  // printf("AL_BZ: '%d'\n", AL_BZ->valueint);
+  // // printf("L_01: '%d'\n", L_01->valueint);
+  // // printf("L_02: '%d'\n", L_02->valueint);
+  // // printf("AC: '%d'\n", AC->valueint);
+  // // printf("PR: '%d'\n", PR->valueint);
+  // // printf("AL_BZ: '%d'\n", AL_BZ->valueint);
   // printf("SPres: '%d'\n", SPres->valueint);
   // printf("SFum: '%d'\n", SFum->valueint);
   // printf("SJan: '%d'\n", SJan->valueint);
@@ -111,8 +114,9 @@ void TrataClienteTCP(int socketCliente)
   int found = 0;
   for (int i = 0; i < num_dispositivos; i++)
   {
-    if (strcmp(id->valuestring, dispositivos[i].id)==0)
+    if (strcmp(id->valuestring, dispositivos[i].id) == 0)
     {
+      strcpy(dispositivos[num_dispositivos].id, id->valuestring);
       dispositivos[i].L_01 = L_01->valueint;
       dispositivos[i].L_02 = L_02->valueint;
       dispositivos[i].AC = AC->valueint;
@@ -130,7 +134,7 @@ void TrataClienteTCP(int socketCliente)
   }
   if (!found)
   {
-    num_dispositivos++;
+    printf(" novo %s\n", id->valuestring);
     strcpy(dispositivos[num_dispositivos].id, id->valuestring);
     dispositivos[num_dispositivos].L_01 = L_01->valueint;
     dispositivos[num_dispositivos].L_02 = L_02->valueint;
@@ -144,6 +148,7 @@ void TrataClienteTCP(int socketCliente)
     dispositivos[num_dispositivos].SC_IN = SC_IN->valueint;
     dispositivos[num_dispositivos].SC_OUT = SC_OUT->valueint;
     dispositivos[num_dispositivos].DHT22 = DHT22->valueint;
+    num_dispositivos += 1;
   }
 }
 
@@ -234,4 +239,19 @@ int enviaDistribuido(int item, int status, unsigned short int porta)
   // close(socketCliente);
 
   return 1;
+}
+
+void printaDispositivos()
+{
+
+  for (int i = 0; i < num_dispositivos; i++)
+  {
+    printf(" -- -- ANDAR %d -- %s \n", i,verificaOnOff(dispositivos[i].id) );
+    printf(" SPres: %s | L_01: %s\n", verificaOnOff(dispositivos[i].SPres),verificaOnOff(dispositivos[i].L_01));
+    printf(" SFum   %s | L_02: %s\n", verificaOnOff(dispositivos[i].SFum),verificaOnOff(dispositivos[i].L_02));
+    printf(" SJan:  %s | AC: %s\n", verificaOnOff(dispositivos[i].SJan),verificaOnOff(dispositivos[i].AC));
+    printf(" SPor:  %s | PR: %s\n", verificaOnOff(dispositivos[i].SPor),verificaOnOff(dispositivos[i].PR));
+    printf(" SC_IN: %s | AL_BZ: %s\n", verificaOnOff(dispositivos[i].SC_IN),verificaOnOff(dispositivos[i].AL_BZ));
+    printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
+  }
 }
