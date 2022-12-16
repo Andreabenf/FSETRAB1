@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "dht22.h": "c",
+        "wiringpi.h": "c"
+    }
+}

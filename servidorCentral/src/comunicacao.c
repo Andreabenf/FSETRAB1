@@ -136,7 +136,7 @@ void TrataClienteTCP(int socketCliente)
       dispositivos[i].SPor = SPor->valueint;
       dispositivos[i].SC_IN = SC_IN->valueint;
       dispositivos[i].SC_OUT = SC_OUT->valueint;
-      dispositivos[i].DHT22 = DHT22->valueint;
+      strcpy(dispositivos[num_dispositivos].DHT22, DHT22->valuestring);
       dispositivos[i].PORTA = PORTA->valueint;
       found = 1;
     }
@@ -157,7 +157,7 @@ void TrataClienteTCP(int socketCliente)
     dispositivos[num_dispositivos].SPor = SPor->valueint;
     dispositivos[num_dispositivos].SC_IN = SC_IN->valueint;
     dispositivos[num_dispositivos].SC_OUT = SC_OUT->valueint;
-    dispositivos[num_dispositivos].DHT22 = DHT22->valueint;
+    strcpy(dispositivos[num_dispositivos].DHT22, DHT22->valuestring);
     dispositivos[num_dispositivos].PORTA = PORTA->valueint;
     num_dispositivos += 1;
   }
@@ -264,6 +264,7 @@ if(num_dispositivos==0){
     printf(" SJan:  %s | AC: %s\n", verificaOnOff(dispositivos[i].SJan),verificaOnOff(dispositivos[i].AC));
     printf(" SPor:  %s | PR: %s\n", verificaOnOff(dispositivos[i].SPor),verificaOnOff(dispositivos[i].PR));
     printf(" SC_IN: %s | AL_BZ: %s\n", verificaOnOff(dispositivos[i].SC_IN),verificaOnOff(dispositivos[i].AL_BZ));
-    printf(" SC_OUT:%s | \n\n", verificaOnOff(dispositivos[i].SC_OUT));
+    printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
+    printf(" %s  \n\n",dispositivos[i].DHT22);
   }
 }

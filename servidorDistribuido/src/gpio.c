@@ -1,6 +1,7 @@
 #include "gpio.h"
 #include "comunicacao.h"
 #include "cJSON.h"
+#include "DHT22.h"
 
 StatusGeral geral;
 const char *printcofing()
@@ -22,7 +23,9 @@ const char *printcofing()
   const cJSON *PORTA = NULL;
 
   cJSON *body = cJSON_CreateObject();
-
+// char stringmeu[35];
+// strcpy(stringmeu,Fetchdht());
+// printf(stringmeu);
   id = cJSON_CreateString(geral.id);
   IP = cJSON_CreateString(geral.IP);
   L_01 = cJSON_CreateNumber(geral.L_01);
@@ -36,7 +39,7 @@ const char *printcofing()
   SPor = cJSON_CreateNumber(geral.SPor);
   SC_IN = cJSON_CreateNumber(geral.SC_IN);
   SC_OUT = cJSON_CreateNumber(geral.SC_OUT);
-  DHT22 = cJSON_CreateNumber(geral.DHT22);
+  DHT22 = cJSON_CreateString(Fetchdht());
   PORTA = cJSON_CreateNumber(geral.PORTA);
 
   cJSON_AddItemToObject(body, "id", id);
@@ -58,7 +61,7 @@ const char *printcofing()
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
   //         geral.id, geral.L_01, geral.L_02, geral.AC, geral.PR, geral.AL_BZ, geral.SPres, geral.SFum, geral.SJan, geral.SPor, geral.SC_IN, geral.SC_OUT, geral.DHT22);
-  //  printf("%s", finaltring);
+  //  printf("%s aquihein", finaltring);
 
   return finaltring;
 }
@@ -86,6 +89,9 @@ printf("leu L_01\n");
   if (strstr(str, "AC") != NULL)
   {
     printf("leu AC\n");
+    char *jsonstring = printcofing();
+    char *stringmeu = Fetchdht();
+printf("PRINTOUUUU %s\n\n%s\n\n",stringmeu,jsonstring);
     pin = configjson.AC;
     estado = digitalRead(pin);
     geral.AC=!estado;
@@ -110,6 +116,7 @@ printf("leu L_01\n");
   digitalWrite(pin, !estado);
 
   char *jsonstring = printcofing();
+  
   enviaCentral(jsonstring);
   free(jsonstring);
 

@@ -22,7 +22,7 @@ typedef struct statusgeral {
   int SPor;
   int SC_IN;
   int SC_OUT;
-  int DHT22;
+  char DHT22[35];
   char IP[15];
   int PORTA;
 } StatusGeral;
