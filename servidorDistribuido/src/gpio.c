@@ -68,33 +68,38 @@ void ativaDesativaDispositivo(const char *str)
   printf("aqui chegou assi: %s\n\n", str);
   int estado;
   int pin;
-  if (strcmp(str, "L_01") == 0)
+  if (strstr(str, "L_01") != NULL)
   {
 
+printf("leu L_01\n");
     pin = configjson.L_01;
     estado = digitalRead(pin);
     geral.L_01=!estado;
   }
-  if (strcmp(str, "L_02") == 0)
+  if (strstr(str, "L_02") != NULL)
   {
+    printf("leu L_02\n");
     pin = configjson.L_02;
     estado = digitalRead(pin);
     geral.L_02=!estado;
   }
-  if (strcmp(str, "AC") == 0)
+  if (strstr(str, "AC") != NULL)
   {
+    printf("leu AC\n");
     pin = configjson.AC;
     estado = digitalRead(pin);
     geral.AC=!estado;
   }
-  if (strcmp(str, "PR") == 0)
+  if (strstr(str, "PR") != NULL)
   {
+    printf("leu PR\n");
     pin = configjson.PR;
     estado = digitalRead(pin);
     geral.PR=!estado;
   }
-  if (strcmp(str, "AL_BZ") == 0)
+  if (strstr(str, "AL_BZ") != NULL)
   {
+    printf("leu AL_BZ\n");
     pin = configjson.AL_BZ;
     estado = digitalRead(pin);
     geral.AL_BZ=!estado;

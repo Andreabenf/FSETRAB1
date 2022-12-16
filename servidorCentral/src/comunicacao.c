@@ -237,10 +237,12 @@ printf("\nip cliente : %s  e porta: %d\n", dispositivos[item].IP,dispositivos[it
     printf("Erro ao tentar conectar com o servidor, tentando novamente\n");
     sleep(1);
   }
-
-  int size = strlen(str);
-  printf("ESTOU MANDANDO: %s\n",str);
-  if (send(socketid, str, size, 0) != size) {
+  char palavra[7];
+  strcpy(palavra,str);
+  int size = strlen(palavra);
+  palavra[size]="\0";
+  printf("ESTOU MANDANDO: %s, %d\n",str,size);
+  if (send(socketid, palavra, size, 0) != size) {
 		printf("Error: falha no envio\n");
     exit(1);
   }

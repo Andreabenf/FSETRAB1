@@ -13,7 +13,7 @@
     },
     {
       "type": "lampada",
-      "sigla": "L_01",
+      "sigla": "L_02",
       "tag": "Lâmpada 02 da Sala",
       "gpio": 4,
       "status": 0
