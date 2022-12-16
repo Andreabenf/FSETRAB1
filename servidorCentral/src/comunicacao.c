@@ -136,7 +136,7 @@ void TrataClienteTCP(int socketCliente)
       dispositivos[i].SPor = SPor->valueint;
       dispositivos[i].SC_IN = SC_IN->valueint;
       dispositivos[i].SC_OUT = SC_OUT->valueint;
-      strcpy(dispositivos[num_dispositivos].DHT22, DHT22->valuestring);
+      strcpy(dispositivos[i].DHT22, DHT22->valuestring);
       dispositivos[i].PORTA = PORTA->valueint;
       found = 1;
     }
@@ -228,7 +228,6 @@ int enviaDistribuido(int item, const char* str)
     exit(1);
   }
 
-printf("\nip cliente : %s  e porta: %d\n", dispositivos[item].IP,dispositivos[item].PORTA);
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = inet_addr(dispositivos[item].IP);
   client.sin_port = htons(dispositivos[item].PORTA);
@@ -241,7 +240,6 @@ printf("\nip cliente : %s  e porta: %d\n", dispositivos[item].IP,dispositivos[it
   strcpy(palavra,str);
   int size = strlen(palavra);
   palavra[size]="\0";
-  printf("ESTOU MANDANDO: %s, %d\n",str,size);
   if (send(socketid, palavra, size, 0) != size) {
 		printf("Error: falha no envio\n");
     exit(1);

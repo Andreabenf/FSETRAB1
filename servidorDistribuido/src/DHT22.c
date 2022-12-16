@@ -69,9 +69,9 @@ const char *Fetchdht(void)
         Valid= 0;
         Hum  = 0.0;
         Temp = 0.0;
-        strcpy(retorno, "Hum: 0.0 Temp:0.0");
+        strcpy(retorno, "");
     }
-    printf("%s\n",retorno);
+    // printf("%s\n",retorno);
         return retorno;
 
 }

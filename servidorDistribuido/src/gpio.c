@@ -23,6 +23,12 @@ const char *printcofing()
   const cJSON *PORTA = NULL;
 
   cJSON *body = cJSON_CreateObject();
+
+  char *stringmeu = Fetchdht();
+    if(strlen(stringmeu)>5){
+      strcpy(geral.DHT22,stringmeu);
+      // printf("maior %s\n",stringmeu);
+    }
 // char stringmeu[35];
 // strcpy(stringmeu,Fetchdht());
 // printf(stringmeu);
@@ -39,7 +45,7 @@ const char *printcofing()
   SPor = cJSON_CreateNumber(geral.SPor);
   SC_IN = cJSON_CreateNumber(geral.SC_IN);
   SC_OUT = cJSON_CreateNumber(geral.SC_OUT);
-  DHT22 = cJSON_CreateString(Fetchdht());
+  DHT22 = cJSON_CreateString(geral.DHT22);
   PORTA = cJSON_CreateNumber(geral.PORTA);
 
   cJSON_AddItemToObject(body, "id", id);
@@ -61,7 +67,7 @@ const char *printcofing()
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
   //         geral.id, geral.L_01, geral.L_02, geral.AC, geral.PR, geral.AL_BZ, geral.SPres, geral.SFum, geral.SJan, geral.SPor, geral.SC_IN, geral.SC_OUT, geral.DHT22);
-  //  printf("%s aquihein", finaltring);
+      // printf("%s\n",finaltring);
 
   return finaltring;
 }
@@ -74,7 +80,7 @@ void ativaDesativaDispositivo(const char *str)
   if (strstr(str, "L_01") != NULL)
   {
 
-printf("leu L_01\n");
+    printf("leu L_01\n");
     pin = configjson.L_01;
     estado = digitalRead(pin);
     geral.L_01=!estado;
@@ -89,9 +95,6 @@ printf("leu L_01\n");
   if (strstr(str, "AC") != NULL)
   {
     printf("leu AC\n");
-    char *jsonstring = printcofing();
-    char *stringmeu = Fetchdht();
-printf("PRINTOUUUU %s\n\n%s\n\n",stringmeu,jsonstring);
     pin = configjson.AC;
     estado = digitalRead(pin);
     geral.AC=!estado;
@@ -110,7 +113,7 @@ printf("PRINTOUUUU %s\n\n%s\n\n",stringmeu,jsonstring);
     estado = digitalRead(pin);
     geral.AL_BZ=!estado;
   }
-
+   
   printf("Alterando estado da gpio %d\n", pin);
   pinMode(pin, OUTPUT);
   digitalWrite(pin, !estado);
@@ -314,7 +317,7 @@ void desativaDispositivos()
   geral.SPor = 0;
   geral.SC_IN = 0;
   geral.SC_OUT = 0;
-  geral.DHT22 = 0;
+  strcpy(geral.DHT22, Fetchdht());
   geral.PORTA = configjson.PORTA;
   int *portasDispositivosSaida = getDispositivosSaida();
   int qtdeDispositivosSaida = getQtdeDispositivosSaida();
