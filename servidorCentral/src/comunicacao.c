@@ -146,7 +146,10 @@ void TrataClienteTCP(int socketCliente)
   }
   if (!found)
   {
-    printf(" novo %s\n", id->valuestring);
+    system("clear");
+    printf("\nNova placa conectada; %s\n", id->valuestring);
+    printf("Digite 1 para atualizar o quadro\n");
+    printf("Digite 2 para entrar no quadro de comandos\n");
     strcpy(dispositivos[num_dispositivos].id, id->valuestring);
     strcpy(dispositivos[num_dispositivos].IP, IP->valuestring);
     dispositivos[num_dispositivos].L_01 = L_01->valueint;
@@ -267,7 +270,7 @@ if(num_dispositivos==0){
     printf(" SPor:  %s | PR: %s\n", verificaOnOff(dispositivos[i].SPor),verificaOnOff(dispositivos[i].PR));
     printf(" SC_IN: %s | AL_BZ: %s\n", verificaOnOff(dispositivos[i].SC_IN),verificaOnOff(dispositivos[i].AL_BZ));
     printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
+    printf(" Número de pessoas na Sala: %d  \n",dispositivos[i].qtdPessoas);
     printf(" %s  \n\n",dispositivos[i].DHT22);
-    printf("Número de pessoas na Sala: %d  \n\n",dispositivos[i].qtdPessoas);
   }
 }
