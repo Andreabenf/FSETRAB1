@@ -15,14 +15,14 @@ Aparelhos aparalhos;
 void mostraMenu()
 {
 
-  // system("clear");
+  system("clear");
   printaDispositivos();
 }
 
 void menuAtivaDesativa()
 {
 
-  // system("clear");
+  system("clear");
   int i = -1;
   do
   {

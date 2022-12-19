@@ -24,6 +24,7 @@ int SC_OUT;
 char DHT22[35];
 char IP[15];
 int PORTA;
+int qtdPessoas;
 }StatusGeral;
 
 

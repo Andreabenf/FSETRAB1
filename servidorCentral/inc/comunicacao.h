@@ -24,6 +24,7 @@ typedef struct statusgeral {
   char DHT22[35];
   char IP[15];
   int PORTA;
+  int qtdPessoas;
 } StatusGeral;
 
 void acionaDistribuido();

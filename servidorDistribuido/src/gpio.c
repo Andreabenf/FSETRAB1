@@ -21,6 +21,7 @@ const char *printcofing()
   const cJSON *DHT22 = NULL;
   const cJSON *IP = NULL;
   const cJSON *PORTA = NULL;
+  const cJSON *QTDPESSOAS = NULL;
 
   cJSON *body = cJSON_CreateObject();
 
@@ -47,6 +48,7 @@ const char *printcofing()
   SC_OUT = cJSON_CreateNumber(geral.SC_OUT);
   DHT22 = cJSON_CreateString(geral.DHT22);
   PORTA = cJSON_CreateNumber(geral.PORTA);
+  QTDPESSOAS = cJSON_CreateNumber(geral.qtdPessoas);
 
   cJSON_AddItemToObject(body, "id", id);
   cJSON_AddItemToObject(body, "L_01", L_01);
@@ -63,6 +65,7 @@ const char *printcofing()
   cJSON_AddItemToObject(body, "DHT22", DHT22);
   cJSON_AddItemToObject(body, "PORTA", PORTA);
   cJSON_AddItemToObject(body, "IP", IP);
+  cJSON_AddItemToObject(body, "QTDPESSOAS", QTDPESSOAS);
 
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
@@ -207,16 +210,16 @@ void SensorEntrada(void)
   int pin = configjson.SC_IN;
   int estado = digitalRead(pin);
   geral.SC_IN = estado;
-  char *jsonstring = printcofing();
-  enviaCentral(jsonstring);
-  free(jsonstring);
+   
+  
   if (estado)
   {
     printf("Entrou!\n");
+    geral.qtdPessoas+=1;
   }
-  else
-  {
-  }
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
 }
 
 void SensorSaida(void)
@@ -225,16 +228,16 @@ void SensorSaida(void)
   int pin = configjson.SC_OUT;
   int estado = digitalRead(pin);
   geral.SC_OUT = estado;
-  char *jsonstring = printcofing();
-  enviaCentral(jsonstring);
-  free(jsonstring);
+  
   if (estado)
   {
     printf("Saiu!\n");
+    if(geral.qtdPessoas>=1)
+    geral.qtdPessoas-=1;
   }
-  else
-  {
-  }
+ char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
+  free(jsonstring);
 }
 
 void *handleGPIO()
@@ -316,6 +319,7 @@ void desativaDispositivos()
   geral.SJan = 0;
   geral.SPor = 0;
   geral.SC_IN = 0;
+  geral.qtdPessoas = 0;
   geral.SC_OUT = 0;
   strcpy(geral.DHT22, Fetchdht());
   geral.PORTA = configjson.PORTA;
