@@ -6,7 +6,6 @@ typedef struct {
   float humidity;
 } DHT22;
 
-#define SERVER_DISTRIBUTED_IP "192.168.1.103"
 #define SERVER_CENTRAL_PORT 11130
 
 typedef struct statusgeral {

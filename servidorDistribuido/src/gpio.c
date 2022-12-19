@@ -329,4 +329,6 @@ void desativaDispositivos()
     pinMode(wiringPIpin, OUTPUT);
     digitalWrite(wiringPIpin, LOW);
   }
+  char *jsonstring = printcofing();
+  enviaCentral(jsonstring);
 }

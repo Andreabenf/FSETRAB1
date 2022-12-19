@@ -7,7 +7,7 @@
 
 #include "dht.h"
 #include "gpio.h"
-
+#include "leJSON.h"
 void *recebeCentral(void *porta)
 {
 
@@ -61,6 +61,7 @@ void *recebeCentral(void *porta)
 void enviaCentral(char *message)
 {
 
+ JSONConfig conf= getConfig();
   struct sockaddr_in client;
 
   int socketid = socket(AF_INET, SOCK_STREAM, 0);
@@ -71,7 +72,7 @@ void enviaCentral(char *message)
   }
 
   client.sin_family = AF_INET;
-  client.sin_addr.s_addr = inet_addr("192.168.1.103");
+  client.sin_addr.s_addr = inet_addr(conf.ipCentral);
   client.sin_port = htons(11130);
 
   while (connect(socketid, (struct sockaddr *)&client, sizeof(client)) < 0)
