@@ -36,12 +36,12 @@ const char *Fetchdht(int pin)
     for(Toggles=0; (Toggles < MAX_TIMINGS) && (uSec < 255); Toggles++) {
 
         clock_gettime(CLOCK_REALTIME, &st);
-        while((digitalRead(7)==lastState) && (uSec < 255) ) {
+        while((digitalRead(pin)==lastState) && (uSec < 255) ) {
             clock_gettime(CLOCK_REALTIME, &cur);
             uSec=durn(st,cur);
         };
 
-        lastState = digitalRead( 7 );
+        lastState = digitalRead( pin );
 
         // First 2 state changes are sensor signaling ready to send, ignore them.
         // Each bit is preceeded by a state change to mark its beginning, ignore it too.
