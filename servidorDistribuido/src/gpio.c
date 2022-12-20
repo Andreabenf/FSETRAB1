@@ -24,8 +24,8 @@ const char *printcofing()
   const cJSON *QTDPESSOAS = NULL;
 
   cJSON *body = cJSON_CreateObject();
-
-  char *stringmeu = Fetchdht();
+JSONConfig configjson = getConfig();
+  char *stringmeu = Fetchdht(configjson.DHT22);
     if(strlen(stringmeu)>5){
       strcpy(geral.DHT22,stringmeu);
       // printf("maior %s\n",stringmeu);
@@ -321,7 +321,7 @@ void desativaDispositivos()
   geral.SC_IN = 0;
   geral.qtdPessoas = 0;
   geral.SC_OUT = 0;
-  strcpy(geral.DHT22, Fetchdht());
+  strcpy(geral.DHT22, Fetchdht(configjson.DHT22));
   geral.PORTA = configjson.PORTA;
   int *portasDispositivosSaida = getDispositivosSaida();
   int qtdeDispositivosSaida = getQtdeDispositivosSaida();

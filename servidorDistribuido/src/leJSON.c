@@ -21,6 +21,7 @@ JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
     const cJSON *item = NULL;
     const cJSON *outputs = NULL;
     const cJSON *inputs = NULL;
+    const cJSON *temp = NULL;
     const cJSON *nomeAndar = NULL;
 
     // Abrindo arquivo JSON
@@ -124,8 +125,20 @@ JSONConfig leJSONConfig(const char * nomeArquivo, const int minhaporta) {
            
         
     }
+    temp = cJSON_GetObjectItemCaseSensitive(live_info, "sensor_temepratura");
 
+cJSON_ArrayForEach(item, temp)
+    {
+        cJSON *gpio = cJSON_GetObjectItemCaseSensitive(item, "gpio");
 
+        config.DHT22 = gpio->valueint;
+
+        
+
+       
+
+        
+    }
     return config;
 
 }

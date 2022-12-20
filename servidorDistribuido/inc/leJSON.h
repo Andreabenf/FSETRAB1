@@ -16,6 +16,7 @@ int L_02;
 int AC;
 int PR;
 int AL_BZ;
+int DHT22;
 char IP[15];
 int PORTA;
     

@@ -11,7 +11,7 @@ int  data[5];
 float Temp  = 0;
     float Hum   = 0;
     int  Valid = 0;
-const char *Fetchdht(void)
+const char *Fetchdht(int pin)
 { 
    struct timespec	st, cur;
     int uSec = 0;
@@ -23,14 +23,14 @@ const char *Fetchdht(void)
 
     data[0] = data[1] = data[2] = data[3] = data[4] = 0;
 
-    pinMode( 7, OUTPUT );
-    digitalWrite( 7, HIGH );
+    pinMode( pin, OUTPUT );
+    digitalWrite( pin, HIGH );
     delay(10);
-    digitalWrite( 7, LOW );
+    digitalWrite( pin, LOW );
     delay(18);
-    digitalWrite( 7, HIGH );
+    digitalWrite( pin, HIGH );
     delayMicroseconds(40);
-    pinMode( 7, INPUT );
+    pinMode( pin, INPUT );
 
     // Read data from sensor.
     for(Toggles=0; (Toggles < MAX_TIMINGS) && (uSec < 255); Toggles++) {
