@@ -1,42 +1,42 @@
 {
   "ip_servidor_central": "192.168.1.132",
   "porta_servidor_central": 11130,
-  "ip_servidor_distribuido": "192.168.1.146",
+  "ip_servidor_distribuido": "192.168.1.132",
   "nome": "Config 2-4",
   "outputs": [
     {
       "type": "lampada",
       "sigla": "L_01",
       "tag": "Lâmpada 01 da Sala",
-      "gpio": 1,
+      "gpio": 25,
       "status": 0
     },
     {
       "type": "lampada",
       "sigla": "L_01",
       "tag": "Lâmpada 02 da Sala",
-      "gpio": 4,
+      "gpio": 24,
       "status": 0
     },
     {
       "type": "ar-condicionado",
       "sigla": "AC",
       "tag": "Ar-Condicionado",
-      "gpio": 5,
+      "gpio": 23,
       "status": 0
     },
     {
       "type": "projetor",
       "sigla": "PR",
       "tag": "Projetor Multimídia",
-      "gpio": 6,
+      "gpio": 22,
       "status": 0
     },
     {
       "type": "buzzer",
       "sigla": "AL_BZ",
       "tag": "Alarme (buzzer)",
-      "gpio": 10,
+      "gpio": 21,
       "status": 0
     }
   ],
@@ -45,42 +45,42 @@
       "type": "presenca",
       "sigla": "SPres",
       "tag": "Sensor de Presença",
-      "gpio": 11,
+      "gpio": 30,
       "status": 0
     },
     {
       "type": "fumaca",
       "sigla": "SFum",
       "tag": "Sensor de Fumaça",
-      "gpio": 31,
+      "gpio": 14,
       "status": 0
     },
     {
       "type": "janela",
       "sigla": "SJan",
       "tag": "Sensor de Janela T01",
-      "gpio": 26,
+      "gpio": 13,
       "status": 0
     },
     {
       "type": "janela",
       "sigla": "SPor",
       "tag": "Sensor de Janela T02",
-      "gpio": 27,
+      "gpio": 12,
       "status": 0
     },
     {
       "type": "contagem",
       "sigla": "SC_IN",
       "tag": "Sensor de Contagem de Pessoas Entrada",
-      "gpio": 28,
+      "gpio": 3,
       "status": 0
     },
     {
       "type": "contagem",
       "sigla": "SC_OUT",
       "tag": "Sensor de Contagem de Pessoas Saída",
-      "gpio": 29,
+      "gpio": 2,
       "status": 0
     }
   ],
@@ -89,7 +89,7 @@
       "model": "dth22",
       "sigla": "DHT22",
       "tag": "Sensor de Temperatura / Umidade DHT22",
-      "gpio": 7,
+      "gpio": 1,
       "status": 0
     }
   ]
