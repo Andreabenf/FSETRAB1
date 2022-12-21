@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 #include "dht.h"
 #include "gpio.h"
 #include "leJSON.h"
+
+
 void *recebeCentral(void *porta)
 {
 

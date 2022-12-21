@@ -71,7 +71,7 @@ const char *Fetchdht(int pin)
         Temp = 0.0;
         strcpy(retorno, "");
     }
-    // printf("%s\n",retorno);
+    //  printf("%s pino:%d\n",retorno, pin);
         return retorno;
 
 }

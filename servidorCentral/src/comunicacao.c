@@ -19,10 +19,35 @@
 #include "comunicacao.h"
 #include "menu.h"
 #include "cJSON.h"
+#include <time.h>
 
 StatusGeral dispositivos[10];
 int num_dispositivos = 0;
 
+
+void appendfile(const char* message,const char* id ){
+
+    FILE *fp;
+    fp = fopen("logs.txt", "a"); // open file in append mode
+    if (fp == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+  time_t t = time(NULL);  // Get current time
+  struct tm *tm = localtime(&t);  // Convert to local time
+  char s[200];
+
+  // Format the timestamp as a string (e.g., "2018-12-21 12:34:56")
+  strftime(s, sizeof(s), "%Y-%m-%d %H:%M:%S - foi enviado '", tm);
+  strcat(s,message);
+  strcat(s,"' para ");
+  strcat(s,id);
+  strcat(s,"\n");
+  
+    fprintf(fp, s);
+    fclose(fp);
+}
 
 int getNumDispositivos()
 {
@@ -246,11 +271,12 @@ int enviaDistribuido(int item, const char* str)
   char palavra[7];
   strcpy(palavra,str);
   int size = strlen(palavra);
-  palavra[size]="\0";
+  
   if (send(socketid, palavra, size, 0) != size) {
 		printf("Error: falha no envio\n");
     exit(1);
   }
+  appendfile(palavra, dispositivos[item].id);
   close(socketid);
 
   return 1;
