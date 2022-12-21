@@ -134,12 +134,6 @@ void TrataClienteTCP(int socketCliente)
   PORTA = cJSON_GetObjectItemCaseSensitive(body, "PORTA");
   QTDPESSOAS = cJSON_GetObjectItemCaseSensitive(body, "QTDPESSOAS");
 
-  // if (cJSON_IsString(id) && (id->valuestring != NULL)) {
-  //   printf("id: '%s'\n", id->valuestring);
-  // } else {
-  //   printf("Se fudeu\n");
-  // }
-
   // printf("id: '%s'\n", id->valuestring);
   // // printf("L_01: '%d'\n", L_01->valueint);
   // // printf("L_02: '%d'\n", L_02->valueint);
@@ -154,10 +148,6 @@ void TrataClienteTCP(int socketCliente)
   // printf("SC_OUT: '%d'\n", SC_OUT->valueint);
   // printf("DHT22: '%d'\n", DHT22->valueint);
 
-  /*---------------- Termina JSON ----------------------*/
-
-  /* 4. Transfere dado do buffer pra variável do comando */
-  // sscanf(buffer, "%d", &command);
 
   int found = 0;
   for (int i = 0; i < num_dispositivos; i++)
@@ -183,7 +173,7 @@ void TrataClienteTCP(int socketCliente)
       if (PUSH->valueint)
       {
         // Se for mensagem push, trata alarme
-        trataAlarme(i, SPres->valueint);
+        trataAlarme(i, SPres->valueint,SFum->valueint,SJan->valueint,SPor->valueint);
       }
       found = 1;
     }
@@ -215,17 +205,17 @@ void TrataClienteTCP(int socketCliente)
     if (PUSH->valueint)
     {
       // Se for mensagem push, trata alarme
-      trataAlarme(num_dispositivos, SPres->valueint);
+      trataAlarme(num_dispositivos, SPres->valueint,SFum->valueint,SJan->valueint,SPor->valueint);
     }
 
     num_dispositivos += 1;
   }
 }
 
-void trataAlarme(int i, int status)
+void trataAlarme(int i, int presenca, int fumaca, int janela, int porta)
 {
   // checa de alarme está desligado e presença foi acionada
-  if (status && !alarme)
+  if (presenca && !alarme)
   {
     enviaDistribuido(i, "L_01");
     enviaDistribuido(i, "L_02");
@@ -233,6 +223,19 @@ void trataAlarme(int i, int status)
     sleep(15);
     enviaDistribuido(i, "L_02");
     enviaDistribuido(i, "L_01");
+  }
+   if ((janela || porta) && alarme){
+     ligaTodasSirenes();
+   }
+    if (fumaca){
+     ligaTodasSirenes();
+   }
+}
+
+void ligaTodasSirenes(){
+  for (int j = 0; j <= num_dispositivos-1; j++)
+  {
+    enviaDistribuido(j, "AL_BZ");
   }
 }
 void *recebeDistribuido()

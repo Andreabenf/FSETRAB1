@@ -81,7 +81,6 @@ const char *printcofing(int ispush)
 void ativaDesativaDispositivo(const char *str)
 {
   JSONConfig configjson = getConfig();
-  printf("aqui chegou assi: %s\n\n", str);
   int estado;
   int pin;
   if (strstr(str, "L_01") != NULL)
@@ -191,9 +190,12 @@ void SensorFumaca(void)
   if (estado)
   {
     printf("Fumaça detectada\n");
+    char *jsonstring = printcofing(1);
+    enviaCentral(jsonstring);
   }
   else
   {
+
     printf("Fumaça desligada\n");
   }
 }
@@ -209,6 +211,8 @@ void Janela1(void)
   free(jsonstring);
   if (estado)
   {
+    char *jsonstring = printcofing(1);
+    enviaCentral(jsonstring);
     printf("Janela 1! abriu\n");
   }
   else
@@ -228,6 +232,8 @@ void Janela2(void)
   free(jsonstring);
   if (estado)
   {
+    char *jsonstring = printcofing(1);
+    enviaCentral(jsonstring);
     printf("Janela 2! abriu\n");
   }
   else

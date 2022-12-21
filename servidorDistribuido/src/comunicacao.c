@@ -37,7 +37,6 @@ void *recebeCentral(void *porta)
 
     char buffer[8];
     buffer[0] = 0;
-    printf("mensagemrecebida: '%s'\n", buffer);
 
     int size = recv(clientid, buffer, 8, 0);
 
@@ -46,8 +45,6 @@ void *recebeCentral(void *porta)
       printf("ERROR");
       exit(1);
     }
-
-    printf("mensagemrecebida: '%s'\n", buffer);
 
     ativaDesativaDispositivo(buffer);
     close(clientid);
