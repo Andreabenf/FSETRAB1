@@ -11,23 +11,25 @@ pthread_t recebe;
 
 // pthread_t tempUmi;
 
-void encerraPrograma() {
+void encerraPrograma()
+{
     printf("Encerrando...\n");
     exit(0);
 }
 
-
-void trata_SIGINT(int signum) {
+void trata_SIGINT(int signum)
+{
     encerraPrograma();
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[])
+{
 
     signal(SIGINT, trata_SIGINT);
 
     pthread_create(&menu, NULL, menuFunc, NULL);
     pthread_create(&recebe, NULL, recebeDistribuido, NULL);
-    
+
     pthread_join(recebe, NULL);
     pthread_join(menu, NULL);
 

@@ -8,9 +8,6 @@
 #include "menu.h"
 #include "comunicacao.h"
 
-
-
-
 void mostraMenu()
 {
 
@@ -50,20 +47,18 @@ void menuAtivaDesativa()
     printf("    T_ON    | Liga tudo na sala   |      %s\n", verificaOnOff(chosen.AL_BZ));
     printf("    T_OFF   | Desliga tudo na sala|      %s\n\n");
 
-
     scanf("%s", &comando);
     if (strcmp(comando, "L_01") == 0 || strcmp(comando, "L_02") == 0 || strcmp(comando, "AC") == 0 || strcmp(comando, "PR") == 0 || strcmp(comando, "AL_BZ") == 0 || strcmp(comando, "T_ON") == 0 || strcmp(comando, "T_OFF") == 0)
     {
-  enviaDistribuido(i,comando);
-  sleep(1);
+      enviaDistribuido(i, comando);
+      sleep(1);
       scan = 0;
     }
 
     __fpurge(stdin);
-    printf("leu: %s\n\n",comando );
+    printf("leu: %s\n\n", comando);
 
   } while (scan);
-
 }
 
 void menuAtivaDesativaGERAL()
@@ -77,25 +72,24 @@ void menuAtivaDesativaGERAL()
     printf("Digite 1 para ligar TODOS OS ANDARES\n");
     scanf("%d", &i);
 
-  } while (i != 0 && i !=1);
+  } while (i != 0 && i != 1);
 
-  if(i){
+  if (i)
+  {
     printf("Ligando todos os andares...\n");
   }
-  else{
+  else
+  {
 
     printf("Desligando todos os andares...\n");
-  
   }
-  for(int j=0;j<=getNumDispositivos() - 1;j++){
-    enviaDistribuido(j,i?"T_ON":"T_OFF");
+  for (int j = 0; j <= getNumDispositivos() - 1; j++)
+  {
+    enviaDistribuido(j, i ? "T_ON" : "T_OFF");
   }
 
   sleep(1);
-    
-
 }
-
 
 void *menuFunc()
 {
@@ -115,7 +109,7 @@ void *menuFunc()
     {
       menuAtivaDesativa();
     }
-     if (i == 3)
+    if (i == 3)
     {
       menuAtivaDesativaGERAL();
     }
@@ -128,4 +122,3 @@ void *menuFunc()
     __fpurge(stdin);
   } while (menuon);
 }
-

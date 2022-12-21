@@ -1,14 +1,16 @@
 #ifndef COMUNICACAO_H_
 #define COMUNICACAO_H_
 
-typedef struct {
+typedef struct
+{
   float temperature;
   float humidity;
 } DHT22;
 
 #define SERVER_CENTRAL_PORT 11130
 
-typedef struct statusgeral {
+typedef struct statusgeral
+{
   char id[25];
   int L_01;
   int L_02;
@@ -30,10 +32,10 @@ typedef struct statusgeral {
 void acionaDistribuido();
 void *recebeDistribuido();
 void leTempUmidade();
-int enviaDistribuido(int item, const char* str);
+int enviaDistribuido(int item, const char *str);
 StatusGeral *getDispositivos();
 int getNumDispositivos();
 StatusGeral getDispositivo(int num);
-char * verificaOnOff(int estadoSensorAparelho);
+char *verificaOnOff(int estadoSensorAparelho);
 
 #endif /* COMUNICACAO_H_ */

@@ -14,7 +14,6 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-
 #include "leJSON.h"
 #include "comunicacao.h"
 #include "gpio.h"
@@ -24,44 +23,51 @@ pthread_t gpio;
 
 JSONConfig configs;
 
-void encerraPrograma() {
+void encerraPrograma()
+{
     printf("Encerrando...\n");
     exit(0);
 }
 
-void inicializaPrograma(const char * filename, const int minhaporta) {
+void inicializaPrograma(const char *filename, const int minhaporta)
+{
 
-    if (wiringPiSetup() == -1) {
-		printf("Failed to initialize wiringPi\n");
-		exit(1);
+    if (wiringPiSetup() == -1)
+    {
+        printf("Failed to initialize wiringPi\n");
+        exit(1);
     }
     configs = leJSONConfig(filename, minhaporta);
 
     desativaDispositivos(0);
 }
 
-void trata_SIGINT(int signum) {
+void trata_SIGINT(int signum)
+{
     encerraPrograma();
 }
 
-int main(int argc, const char * argv[]) {
-   
-   signal(SIGINT, trata_SIGINT);
+int main(int argc, const char *argv[])
+{
 
-    if (argc >= 2){
-		inicializaPrograma(argv[1], atoi(argv[2]));
-	}
-	else{
-		printf("O arquivo de configuracao precisa ser passado como parametro\n");
-		return -1;
-	}
+    signal(SIGINT, trata_SIGINT);
+
+    if (argc >= 2)
+    {
+        inicializaPrograma(argv[1], atoi(argv[2]));
+    }
+    else
+    {
+        printf("O arquivo de configuracao precisa ser passado como parametro\n");
+        return -1;
+    }
     int porta = getPorta();
 
     pthread_create(&comunicacao, NULL, recebeCentral, &porta);
     pthread_create(&gpio, NULL, handleGPIO, NULL);
-    
+
     pthread_join(comunicacao, NULL);
     pthread_join(gpio, NULL);
-	
+
     return 0;
 }

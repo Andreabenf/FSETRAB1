@@ -8,7 +8,6 @@
 #include "gpio.h"
 #include "leJSON.h"
 
-
 void *recebeCentral(void *porta)
 {
 
@@ -38,7 +37,7 @@ void *recebeCentral(void *porta)
     int clientid = accept(serverid, (struct sockaddr *)&client, &len);
 
     char buffer[8];
-    buffer[0]=0;
+    buffer[0] = 0;
     printf("mensagemrecebida: '%s'\n", buffer);
 
     int size = recv(clientid, buffer, 8, 0);
@@ -62,7 +61,7 @@ void *recebeCentral(void *porta)
 void enviaCentral(char *message)
 {
 
- JSONConfig conf= getConfig();
+  JSONConfig conf = getConfig();
   struct sockaddr_in client;
 
   int socketid = socket(AF_INET, SOCK_STREAM, 0);

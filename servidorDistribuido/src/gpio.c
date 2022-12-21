@@ -25,15 +25,16 @@ const char *printcofing(int ispush)
   const cJSON *PUSH = NULL;
 
   cJSON *body = cJSON_CreateObject();
-JSONConfig configjson = getConfig();
+  JSONConfig configjson = getConfig();
   char *stringmeu = Fetchdht(configjson.DHT22);
-    if(strlen(stringmeu)>5){
-      strcpy(geral.DHT22,stringmeu);
-      // printf("maior %s\n",stringmeu);
-    }
-// char stringmeu[35];
-// strcpy(stringmeu,Fetchdht());
-// printf(stringmeu);
+  if (strlen(stringmeu) > 5)
+  {
+    strcpy(geral.DHT22, stringmeu);
+    // printf("maior %s\n",stringmeu);
+  }
+  // char stringmeu[35];
+  // strcpy(stringmeu,Fetchdht());
+  // printf(stringmeu);
   id = cJSON_CreateString(geral.id);
   IP = cJSON_CreateString(geral.IP);
   L_01 = cJSON_CreateNumber(geral.L_01);
@@ -73,7 +74,7 @@ JSONConfig configjson = getConfig();
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
   //         geral.id, geral.L_01, geral.L_02, geral.AC, geral.PR, geral.AL_BZ, geral.SPres, geral.SFum, geral.SJan, geral.SPor, geral.SC_IN, geral.SC_OUT, geral.DHT22);
-      // printf("%s\n",finaltring);
+  // printf("%s\n",finaltring);
 
   return finaltring;
 }
@@ -89,74 +90,72 @@ void ativaDesativaDispositivo(const char *str)
     printf("leu L_01\n");
     pin = configjson.L_01;
     estado = digitalRead(pin);
-    geral.L_01=!estado;
+    geral.L_01 = !estado;
   }
   if (strstr(str, "L_02") != NULL)
   {
     printf("leu L_02\n");
     pin = configjson.L_02;
     estado = digitalRead(pin);
-    geral.L_02=!estado;
+    geral.L_02 = !estado;
   }
   if (strstr(str, "AC") != NULL)
   {
     printf("leu AC\n");
     pin = configjson.AC;
     estado = digitalRead(pin);
-    geral.AC=!estado;
+    geral.AC = !estado;
   }
   if (strstr(str, "PR") != NULL)
   {
     printf("leu PR\n");
     pin = configjson.PR;
     estado = digitalRead(pin);
-    geral.PR=!estado;
+    geral.PR = !estado;
   }
   if (strstr(str, "AL_BZ") != NULL)
   {
     printf("leu AL_BZ\n");
     pin = configjson.AL_BZ;
     estado = digitalRead(pin);
-    geral.AL_BZ=!estado;
+    geral.AL_BZ = !estado;
   }
-   if (strstr(str, "AL_BZ") != NULL)
+  if (strstr(str, "AL_BZ") != NULL)
   {
     printf("leu AL_BZ\n");
     pin = configjson.AL_BZ;
     estado = digitalRead(pin);
-    geral.AL_BZ=!estado;
+    geral.AL_BZ = !estado;
   }
-   if (strstr(str, "AL_BZ") != NULL)
+  if (strstr(str, "AL_BZ") != NULL)
   {
     printf("leu AL_BZ\n");
     pin = configjson.AL_BZ;
     estado = digitalRead(pin);
-    geral.AL_BZ=!estado;
+    geral.AL_BZ = !estado;
   }
-   if (strstr(str, "T_OFF") != NULL)
+  if (strstr(str, "T_OFF") != NULL)
   {
     printf("leu T_OFF\n");
-     desativaDispositivos(0);
-     return;
+    desativaDispositivos(0);
+    return;
   }
-   if (strstr(str, "T_ON") != NULL)
+  if (strstr(str, "T_ON") != NULL)
   {
     printf("leu T_ON\n");
-   
-       desativaDispositivos(1);
-       return;
 
+    desativaDispositivos(1);
+    return;
   }
-   
+
   printf("Alterando estado da gpio %d\n", pin);
   pinMode(pin, OUTPUT);
   digitalWrite(pin, !estado);
 
   char *jsonstring = printcofing(0);
-  
+
   enviaCentral(jsonstring);
   free(jsonstring);
-
 }
 
 void SensorPresenca(void)
@@ -172,7 +171,7 @@ void SensorPresenca(void)
   {
     printf("Presença acionado\n");
     char *jsonstring = printcofing(1);
-  enviaCentral(jsonstring);
+    enviaCentral(jsonstring);
   }
   else
   {
@@ -243,12 +242,11 @@ void SensorEntrada(void)
   int pin = configjson.SC_IN;
   int estado = digitalRead(pin);
   geral.SC_IN = estado;
-   
-  
+
   if (estado)
   {
     printf("Entrou!\n");
-    geral.qtdPessoas+=1;
+    geral.qtdPessoas += 1;
   }
   char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
@@ -261,14 +259,14 @@ void SensorSaida(void)
   int pin = configjson.SC_OUT;
   int estado = digitalRead(pin);
   geral.SC_OUT = estado;
-  
+
   if (estado)
   {
     printf("Saiu!\n");
-    if(geral.qtdPessoas>=1)
-    geral.qtdPessoas-=1;
+    if (geral.qtdPessoas >= 1)
+      geral.qtdPessoas -= 1;
   }
- char *jsonstring = printcofing(0);
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
 }
@@ -362,11 +360,12 @@ void desativaDispositivos(int mode)
 
   for (size_t i = 0; i < qtdeDispositivosSaida; i++)
   {
-    if(portasDispositivosSaida[i]!=configjson.AL_BZ){
+    if (portasDispositivosSaida[i] != configjson.AL_BZ)
+    {
 
-    wiringPIpin = portasDispositivosSaida[i];
-    pinMode(wiringPIpin, OUTPUT);
-    digitalWrite(wiringPIpin, mode);
+      wiringPIpin = portasDispositivosSaida[i];
+      pinMode(wiringPIpin, OUTPUT);
+      digitalWrite(wiringPIpin, mode);
     }
   }
   char *jsonstring = printcofing(0);

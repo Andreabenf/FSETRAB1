@@ -25,35 +25,38 @@ StatusGeral dispositivos[10];
 int num_dispositivos = 0;
 int alarme = 1;
 
-
-int getAlarme(void){
+int getAlarme(void)
+{
   return alarme;
 }
-int changeAlarme(void){
-  alarme=!alarme;
+int changeAlarme(void)
+{
+  alarme = !alarme;
 }
-void appendfile(const char* message,const char* id ){
+void appendfile(const char *message, const char *id)
+{
 
-    FILE *fp;
-    fp = fopen("logs.txt", "a"); // open file in append mode
-    if (fp == NULL) {
-        printf("Error opening file!\n");
-        return 1;
-    }
+  FILE *fp;
+  fp = fopen("logs.txt", "a"); // open file in append mode
+  if (fp == NULL)
+  {
+    printf("Error opening file!\n");
+    return 1;
+  }
 
-  time_t t = time(NULL);  // Get current time
-  struct tm *tm = localtime(&t);  // Convert to local time
+  time_t t = time(NULL);         // Get current time
+  struct tm *tm = localtime(&t); // Convert to local time
   char s[200];
 
   // Format the timestamp as a string (e.g., "2018-12-21 12:34:56")
   strftime(s, sizeof(s), "%Y-%m-%d %H:%M:%S - foi enviado '", tm);
-  strcat(s,message);
-  strcat(s,"' para ");
-  strcat(s,id);
-  strcat(s,"\n");
-  
-    fprintf(fp, s);
-    fclose(fp);
+  strcat(s, message);
+  strcat(s, "' para ");
+  strcat(s, id);
+  strcat(s, "\n");
+
+  fprintf(fp, s);
+  fclose(fp);
 }
 
 int getNumDispositivos()
@@ -62,15 +65,16 @@ int getNumDispositivos()
   return num_dispositivos;
 }
 
-char * verificaOnOff(int estadoSensorAparelho) {
-    if(estadoSensorAparelho == 1)
-        return "ON ";
-    else
-        return "OFF";
-
+char *verificaOnOff(int estadoSensorAparelho)
+{
+  if (estadoSensorAparelho == 1)
+    return "ON ";
+  else
+    return "OFF";
 }
 
-StatusGeral getDispositivo(int num){
+StatusGeral getDispositivo(int num)
+{
   return dispositivos[num];
 }
 
@@ -91,10 +95,9 @@ void TrataClienteTCP(int socketCliente)
   // printf("Mensagem: '%s'\n", buffer);
 
   /*---------------- Processa JSON ----------------------*/
-  
+
   cJSON *body = cJSON_Parse(buffer);
 
-  
   const cJSON *id = NULL;
   const cJSON *L_01 = NULL;
   const cJSON *L_02 = NULL;
@@ -112,9 +115,6 @@ void TrataClienteTCP(int socketCliente)
   const cJSON *IP = NULL;
   const cJSON *QTDPESSOAS = NULL;
   const cJSON *PUSH = NULL;
-
-
-
 
   PUSH = cJSON_GetObjectItemCaseSensitive(body, "PUSH");
   id = cJSON_GetObjectItemCaseSensitive(body, "id");
@@ -180,10 +180,11 @@ void TrataClienteTCP(int socketCliente)
       dispositivos[i].qtdPessoas = QTDPESSOAS->valueint;
       strcpy(dispositivos[i].DHT22, DHT22->valuestring);
       dispositivos[i].PORTA = PORTA->valueint;
-       if(PUSH->valueint){
-          // Se for mensagem push, trata alarme
-  trataAlarme(i,SPres->valueint);
-}
+      if (PUSH->valueint)
+      {
+        // Se for mensagem push, trata alarme
+        trataAlarme(i, SPres->valueint);
+      }
       found = 1;
     }
   }
@@ -211,25 +212,27 @@ void TrataClienteTCP(int socketCliente)
     dispositivos[num_dispositivos].qtdPessoas = QTDPESSOAS->valueint;
     strcpy(dispositivos[num_dispositivos].DHT22, DHT22->valuestring);
     dispositivos[num_dispositivos].PORTA = PORTA->valueint;
-    if(PUSH->valueint){
+    if (PUSH->valueint)
+    {
       // Se for mensagem push, trata alarme
-  trataAlarme(num_dispositivos,SPres->valueint);
-}
-    
+      trataAlarme(num_dispositivos, SPres->valueint);
+    }
+
     num_dispositivos += 1;
   }
-
 }
 
-void trataAlarme(int i, int status){
+void trataAlarme(int i, int status)
+{
   // checa de alarme está desligado e presença foi acionada
-  if(status && !alarme){
-    enviaDistribuido(i,"L_01");
-    enviaDistribuido(i,"L_02");
+  if (status && !alarme)
+  {
+    enviaDistribuido(i, "L_01");
+    enviaDistribuido(i, "L_02");
 
     sleep(15);
-    enviaDistribuido(i,"L_02");
-    enviaDistribuido(i,"L_01");
+    enviaDistribuido(i, "L_02");
+    enviaDistribuido(i, "L_01");
   }
 }
 void *recebeDistribuido()
@@ -284,13 +287,14 @@ void *recebeDistribuido()
   close(socketServidor);
 }
 
-int enviaDistribuido(int item, const char* str)
+int enviaDistribuido(int item, const char *str)
 {
 
   struct sockaddr_in client;
 
   int socketid = socket(AF_INET, SOCK_STREAM, 0);
-  if (socketid == -1) {
+  if (socketid == -1)
+  {
     printf("Falha ao criar socket\n");
     exit(1);
   }
@@ -299,16 +303,18 @@ int enviaDistribuido(int item, const char* str)
   client.sin_addr.s_addr = inet_addr(dispositivos[item].IP);
   client.sin_port = htons(dispositivos[item].PORTA);
 
-  while(connect(socketid, (struct sockaddr*) &client, sizeof(client)) < 0){
+  while (connect(socketid, (struct sockaddr *)&client, sizeof(client)) < 0)
+  {
     printf("Erro ao tentar conectar com o servidor, tentando novamente\n");
     sleep(1);
   }
   char palavra[7];
-  strcpy(palavra,str);
+  strcpy(palavra, str);
   int size = strlen(palavra);
-  
-  if (send(socketid, palavra, size, 0) != size) {
-		printf("Error: falha no envio\n");
+
+  if (send(socketid, palavra, size, 0) != size)
+  {
+    printf("Error: falha no envio\n");
     exit(1);
   }
   appendfile(palavra, dispositivos[item].id);
@@ -319,21 +325,24 @@ int enviaDistribuido(int item, const char* str)
 
 void printaDispositivos()
 {
-if(num_dispositivos==0){
-  printf("\n\nCONECTE ALGUM SERVIDOR DISTRIBUIDO\n\n");
-}else{
-  printf("\n MODO ALARME: %s \n",verificaOnOff(alarme) ) ;
-  for (int i = 0; i < num_dispositivos; i++)
+  if (num_dispositivos == 0)
   {
-    printf("\n ---- ANDAR %d ---- %s \n", i,dispositivos[i].id) ;
-    printf(" SPres: %s | L_01: %s\n", verificaOnOff(dispositivos[i].SPres),verificaOnOff(dispositivos[i].L_01));
-    printf(" SFum   %s | L_02: %s\n", verificaOnOff(dispositivos[i].SFum),verificaOnOff(dispositivos[i].L_02));
-    printf(" SJan:  %s | AC: %s\n", verificaOnOff(dispositivos[i].SJan),verificaOnOff(dispositivos[i].AC));
-    printf(" SPor:  %s | PR: %s\n", verificaOnOff(dispositivos[i].SPor),verificaOnOff(dispositivos[i].PR));
-    printf(" SC_IN: %s | AL_BZ: %s\n", verificaOnOff(dispositivos[i].SC_IN),verificaOnOff(dispositivos[i].AL_BZ));
-    printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
-    printf(" Número de pessoas na Sala: %d  \n",dispositivos[i].qtdPessoas);
-    printf(" %s  \n\n",dispositivos[i].DHT22);
+    printf("\n\nCONECTE ALGUM SERVIDOR DISTRIBUIDO\n\n");
   }
+  else
+  {
+    printf("\n MODO ALARME: %s \n", verificaOnOff(alarme));
+    for (int i = 0; i < num_dispositivos; i++)
+    {
+      printf("\n ---- ANDAR %d ---- %s \n", i, dispositivos[i].id);
+      printf(" SPres: %s | L_01: %s\n", verificaOnOff(dispositivos[i].SPres), verificaOnOff(dispositivos[i].L_01));
+      printf(" SFum   %s | L_02: %s\n", verificaOnOff(dispositivos[i].SFum), verificaOnOff(dispositivos[i].L_02));
+      printf(" SJan:  %s | AC: %s\n", verificaOnOff(dispositivos[i].SJan), verificaOnOff(dispositivos[i].AC));
+      printf(" SPor:  %s | PR: %s\n", verificaOnOff(dispositivos[i].SPor), verificaOnOff(dispositivos[i].PR));
+      printf(" SC_IN: %s | AL_BZ: %s\n", verificaOnOff(dispositivos[i].SC_IN), verificaOnOff(dispositivos[i].AL_BZ));
+      printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
+      printf(" Número de pessoas na Sala: %d  \n", dispositivos[i].qtdPessoas);
+      printf(" %s  \n\n", dispositivos[i].DHT22);
+    }
   }
 }
