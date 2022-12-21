@@ -9,8 +9,7 @@
 #include "comunicacao.h"
 
 
-Sensores sensores;
-Aparelhos aparalhos;
+
 
 void mostraMenu()
 {
@@ -109,6 +108,8 @@ void *menuFunc()
     printf("Digite 1 para atualizar o quadro\n");
     printf("Digite 2 para entrar no quadro de comandos POR SALA\n");
     printf("Digite 3 para desligar ou ligar TODAS AS SALAS\n");
+    printf("Digite 4 para desativar ou ativar o MODO ALARME\n");
+
     scanf("%d", &i);
     if (i == 2)
     {
@@ -117,6 +118,10 @@ void *menuFunc()
      if (i == 3)
     {
       menuAtivaDesativaGERAL();
+    }
+    if (i == 4)
+    {
+      changeAlarme();
     }
     i = 0;
 

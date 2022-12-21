@@ -3,5 +3,5 @@
 
 void* recebeCentral(void *porta);
 void enviaCentral(char *message);
-
+int changeAlarme(void);
 #endif /* COMUNICACAO_H_ */

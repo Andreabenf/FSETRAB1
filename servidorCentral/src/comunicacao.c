@@ -23,8 +23,15 @@
 
 StatusGeral dispositivos[10];
 int num_dispositivos = 0;
+int alarme = 1;
 
 
+int getAlarme(void){
+  return alarme;
+}
+int changeAlarme(void){
+  alarme=!alarme;
+}
 void appendfile(const char* message,const char* id ){
 
     FILE *fp;
@@ -84,8 +91,10 @@ void TrataClienteTCP(int socketCliente)
   // printf("Mensagem: '%s'\n", buffer);
 
   /*---------------- Processa JSON ----------------------*/
+  
   cJSON *body = cJSON_Parse(buffer);
 
+  
   const cJSON *id = NULL;
   const cJSON *L_01 = NULL;
   const cJSON *L_02 = NULL;
@@ -102,7 +111,12 @@ void TrataClienteTCP(int socketCliente)
   const cJSON *PORTA = NULL;
   const cJSON *IP = NULL;
   const cJSON *QTDPESSOAS = NULL;
+  const cJSON *PUSH = NULL;
 
+
+
+
+  PUSH = cJSON_GetObjectItemCaseSensitive(body, "PUSH");
   id = cJSON_GetObjectItemCaseSensitive(body, "id");
   IP = cJSON_GetObjectItemCaseSensitive(body, "IP");
   L_01 = cJSON_GetObjectItemCaseSensitive(body, "L_01");
@@ -166,6 +180,10 @@ void TrataClienteTCP(int socketCliente)
       dispositivos[i].qtdPessoas = QTDPESSOAS->valueint;
       strcpy(dispositivos[i].DHT22, DHT22->valuestring);
       dispositivos[i].PORTA = PORTA->valueint;
+       if(PUSH->valueint){
+          // Se for mensagem push, trata alarme
+  trataAlarme(i,SPres->valueint);
+}
       found = 1;
     }
   }
@@ -176,6 +194,7 @@ void TrataClienteTCP(int socketCliente)
     printf("Digite 1 para atualizar o quadro\n");
     printf("Digite 2 para entrar no quadro de comandos POR SALA\n");
     printf("Digite 3 para desligar ou ligar TODAS AS SALAS\n");
+    printf("Digite 4 para desativar ou ativar o MODO ALARME\n");
     strcpy(dispositivos[num_dispositivos].id, id->valuestring);
     strcpy(dispositivos[num_dispositivos].IP, IP->valuestring);
     dispositivos[num_dispositivos].L_01 = L_01->valueint;
@@ -192,10 +211,27 @@ void TrataClienteTCP(int socketCliente)
     dispositivos[num_dispositivos].qtdPessoas = QTDPESSOAS->valueint;
     strcpy(dispositivos[num_dispositivos].DHT22, DHT22->valuestring);
     dispositivos[num_dispositivos].PORTA = PORTA->valueint;
+    if(PUSH->valueint){
+      // Se for mensagem push, trata alarme
+  trataAlarme(num_dispositivos,SPres->valueint);
+}
+    
     num_dispositivos += 1;
   }
+
 }
 
+void trataAlarme(int i, int status){
+  // checa de alarme está desligado e presença foi acionada
+  if(status && !alarme){
+    enviaDistribuido(i,"L_01");
+    enviaDistribuido(i,"L_02");
+
+    sleep(15);
+    enviaDistribuido(i,"L_02");
+    enviaDistribuido(i,"L_01");
+  }
+}
 void *recebeDistribuido()
 {
   /* 1. Cria variáveis necessárias para o socket */
@@ -277,6 +313,7 @@ int enviaDistribuido(int item, const char* str)
   }
   appendfile(palavra, dispositivos[item].id);
   close(socketid);
+  // printf("aguardando retorno...\n");
   return 1;
 }
 
@@ -284,7 +321,8 @@ void printaDispositivos()
 {
 if(num_dispositivos==0){
   printf("\n\nCONECTE ALGUM SERVIDOR DISTRIBUIDO\n\n");
-}
+}else{
+  printf("\n MODO ALARME: %s \n",verificaOnOff(alarme) ) ;
   for (int i = 0; i < num_dispositivos; i++)
   {
     printf("\n ---- ANDAR %d ---- %s \n", i,dispositivos[i].id) ;
@@ -296,5 +334,6 @@ if(num_dispositivos==0){
     printf(" SC_OUT:%s | \n", verificaOnOff(dispositivos[i].SC_OUT));
     printf(" Número de pessoas na Sala: %d  \n",dispositivos[i].qtdPessoas);
     printf(" %s  \n\n",dispositivos[i].DHT22);
+  }
   }
 }

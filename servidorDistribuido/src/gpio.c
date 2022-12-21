@@ -4,7 +4,7 @@
 #include "DHT22.h"
 
 StatusGeral geral;
-const char *printcofing()
+const char *printcofing(int ispush)
 {
   const cJSON *id = NULL;
   const cJSON *L_01 = NULL;
@@ -22,6 +22,7 @@ const char *printcofing()
   const cJSON *IP = NULL;
   const cJSON *PORTA = NULL;
   const cJSON *QTDPESSOAS = NULL;
+  const cJSON *PUSH = NULL;
 
   cJSON *body = cJSON_CreateObject();
 JSONConfig configjson = getConfig();
@@ -49,6 +50,7 @@ JSONConfig configjson = getConfig();
   DHT22 = cJSON_CreateString(geral.DHT22);
   PORTA = cJSON_CreateNumber(geral.PORTA);
   QTDPESSOAS = cJSON_CreateNumber(geral.qtdPessoas);
+  PUSH = cJSON_CreateNumber(ispush);
 
   cJSON_AddItemToObject(body, "id", id);
   cJSON_AddItemToObject(body, "L_01", L_01);
@@ -66,6 +68,7 @@ JSONConfig configjson = getConfig();
   cJSON_AddItemToObject(body, "PORTA", PORTA);
   cJSON_AddItemToObject(body, "IP", IP);
   cJSON_AddItemToObject(body, "QTDPESSOAS", QTDPESSOAS);
+  cJSON_AddItemToObject(body, "PUSH", PUSH);
 
   char *finaltring = cJSON_Print(body);
   // sprintf(finaltring, "{\"id\": \"%s\",\n\"L_01: \"%d\",\n\"L_02\": \"%d\",\n\"AC\": \"%d\",\n\"PR\": \"%d\",\n\"AL_BZ\": \"%d\",\n\"SPres\": \"%d\",\n\"SFum\": \"%d\",\n\"SJan\": \"%d\",\n\"SPor\": \"%d\",\n\"SC_IN\": \"%d\",\n\"SC_OUT\": \"%d\",\n\"DHT22\": \"%d\"}",
@@ -149,7 +152,7 @@ void ativaDesativaDispositivo(const char *str)
   pinMode(pin, OUTPUT);
   digitalWrite(pin, !estado);
 
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   
   enviaCentral(jsonstring);
   free(jsonstring);
@@ -162,12 +165,14 @@ void SensorPresenca(void)
   int pin = configjson.SPres;
   int estado = digitalRead(pin);
   geral.SPres = estado;
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
   if (estado)
   {
     printf("Presença acionado\n");
+    char *jsonstring = printcofing(1);
+  enviaCentral(jsonstring);
   }
   else
   {
@@ -181,7 +186,7 @@ void SensorFumaca(void)
   int pin = configjson.SFum;
   int estado = digitalRead(pin);
   geral.SFum = estado;
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
   if (estado)
@@ -200,7 +205,7 @@ void Janela1(void)
   int pin = configjson.SJan;
   int estado = digitalRead(pin);
   geral.SJan = estado;
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
   if (estado)
@@ -219,7 +224,7 @@ void Janela2(void)
   int pin = configjson.SPor;
   int estado = digitalRead(pin);
   geral.SPor = estado;
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
   if (estado)
@@ -245,7 +250,7 @@ void SensorEntrada(void)
     printf("Entrou!\n");
     geral.qtdPessoas+=1;
   }
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
 }
@@ -263,7 +268,7 @@ void SensorSaida(void)
     if(geral.qtdPessoas>=1)
     geral.qtdPessoas-=1;
   }
- char *jsonstring = printcofing();
+ char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
   free(jsonstring);
 }
@@ -364,6 +369,6 @@ void desativaDispositivos(int mode)
     digitalWrite(wiringPIpin, mode);
     }
   }
-  char *jsonstring = printcofing();
+  char *jsonstring = printcofing(0);
   enviaCentral(jsonstring);
 }
