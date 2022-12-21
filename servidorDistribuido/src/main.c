@@ -37,7 +37,7 @@ void inicializaPrograma(const char * filename, const int minhaporta) {
     }
     configs = leJSONConfig(filename, minhaporta);
 
-    desativaDispositivos();
+    desativaDispositivos(0);
 }
 
 void trata_SIGINT(int signum) {

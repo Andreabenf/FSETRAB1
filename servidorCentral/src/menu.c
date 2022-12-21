@@ -43,15 +43,20 @@ void menuAtivaDesativa()
     printf("------------|---------------------|------------------\n");
     printf("                    SALA  %d      \n", i);
     printf("------------|---------------------|------------------\n");
-    printf("     L_01   | Lâmpada 01 da Sala  |      %s\n", verificaOnOff(chosen.L_01));
-    printf("     L_02   | Lâmpada 02 da Sala  |      %s\n", verificaOnOff(chosen.L_02));
-    printf("     AC     | Ar-Condicionado     |      %s\n", verificaOnOff(chosen.AC));
-    printf("     PR     | Projetor Multimídia |      %s\n", verificaOnOff(chosen.PR));
-    printf("     AL_BZ  | Alarme              |      %s\n\n", verificaOnOff(chosen.AL_BZ));
+    printf("    L_01    | Lâmpada 01 da Sala  |      %s\n", verificaOnOff(chosen.L_01));
+    printf("    L_02    | Lâmpada 02 da Sala  |      %s\n", verificaOnOff(chosen.L_02));
+    printf("    AC      | Ar-Condicionado     |      %s\n", verificaOnOff(chosen.AC));
+    printf("    PR      | Projetor Multimídia |      %s\n", verificaOnOff(chosen.PR));
+    printf("    AL_BZ   | Alarme              |      %s\n", verificaOnOff(chosen.AL_BZ));
+    printf("    T_ON    | Liga tudo na sala   |      %s\n", verificaOnOff(chosen.AL_BZ));
+    printf("    T_OFF   | Desliga tudo na sala|      %s\n\n");
+
 
     scanf("%s", &comando);
-    if (strcmp(comando, "L_01") == 0 || strcmp(comando, "L_02") == 0 || strcmp(comando, "AC") == 0 || strcmp(comando, "PR") == 0 || strcmp(comando, "AL_BZ") == 0)
+    if (strcmp(comando, "L_01") == 0 || strcmp(comando, "L_02") == 0 || strcmp(comando, "AC") == 0 || strcmp(comando, "PR") == 0 || strcmp(comando, "AL_BZ") == 0 || strcmp(comando, "T_ON") == 0 || strcmp(comando, "T_OFF") == 0)
     {
+  enviaDistribuido(i,comando);
+  sleep(1);
       scan = 0;
     }
 
@@ -59,7 +64,36 @@ void menuAtivaDesativa()
     printf("leu: %s\n\n",comando );
 
   } while (scan);
-enviaDistribuido(i,comando);
+
+}
+
+void menuAtivaDesativaGERAL()
+{
+
+  system("clear");
+  int i = -1;
+  do
+  {
+    printf("Digite 0 para DESLIGAR TODOS OS ANDARES\n");
+    printf("Digite 1 para ligar TODOS OS ANDARES\n");
+    scanf("%d", &i);
+
+  } while (i != 0 && i !=1);
+
+  if(i){
+    printf("Ligando todos os andares...\n");
+  }
+  else{
+
+    printf("Desligando todos os andares...\n");
+  
+  }
+  for(int j=0;j<=getNumDispositivos() - 1;j++){
+    enviaDistribuido(j,i?"T_ON":"T_OFF");
+  }
+
+  sleep(1);
+    
 
 }
 
@@ -73,11 +107,16 @@ void *menuFunc()
     mostraMenu();
     __fpurge(stdin);
     printf("Digite 1 para atualizar o quadro\n");
-    printf("Digite 2 para entrar no quadro de comandos\n");
+    printf("Digite 2 para entrar no quadro de comandos POR SALA\n");
+    printf("Digite 3 para desligar ou ligar TODAS AS SALAS\n");
     scanf("%d", &i);
     if (i == 2)
     {
       menuAtivaDesativa();
+    }
+     if (i == 3)
+    {
+      menuAtivaDesativaGERAL();
     }
     i = 0;
 

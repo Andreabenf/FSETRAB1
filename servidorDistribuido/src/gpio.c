@@ -116,6 +116,34 @@ void ativaDesativaDispositivo(const char *str)
     estado = digitalRead(pin);
     geral.AL_BZ=!estado;
   }
+   if (strstr(str, "AL_BZ") != NULL)
+  {
+    printf("leu AL_BZ\n");
+    pin = configjson.AL_BZ;
+    estado = digitalRead(pin);
+    geral.AL_BZ=!estado;
+  }
+   if (strstr(str, "AL_BZ") != NULL)
+  {
+    printf("leu AL_BZ\n");
+    pin = configjson.AL_BZ;
+    estado = digitalRead(pin);
+    geral.AL_BZ=!estado;
+  }
+   if (strstr(str, "T_OFF") != NULL)
+  {
+    printf("leu T_OFF\n");
+     desativaDispositivos(0);
+     return;
+  }
+   if (strstr(str, "T_ON") != NULL)
+  {
+    printf("leu T_ON\n");
+   
+       desativaDispositivos(1);
+       return;
+
+  }
    
   printf("Alterando estado da gpio %d\n", pin);
   pinMode(pin, OUTPUT);
@@ -304,7 +332,7 @@ void *handleGPIO()
   }
 }
 
-void desativaDispositivos()
+void desativaDispositivos(int mode)
 {
   JSONConfig configjson = getConfig();
   strcpy(geral.id, configjson.id);
@@ -329,9 +357,12 @@ void desativaDispositivos()
 
   for (size_t i = 0; i < qtdeDispositivosSaida; i++)
   {
+    if(portasDispositivosSaida[i]!=configjson.AL_BZ){
+
     wiringPIpin = portasDispositivosSaida[i];
     pinMode(wiringPIpin, OUTPUT);
-    digitalWrite(wiringPIpin, LOW);
+    digitalWrite(wiringPIpin, mode);
+    }
   }
   char *jsonstring = printcofing();
   enviaCentral(jsonstring);

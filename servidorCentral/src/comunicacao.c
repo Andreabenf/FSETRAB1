@@ -174,7 +174,8 @@ void TrataClienteTCP(int socketCliente)
     system("clear");
     printf("\nNova placa conectada; %s\n", id->valuestring);
     printf("Digite 1 para atualizar o quadro\n");
-    printf("Digite 2 para entrar no quadro de comandos\n");
+    printf("Digite 2 para entrar no quadro de comandos POR SALA\n");
+    printf("Digite 3 para desligar ou ligar TODAS AS SALAS\n");
     strcpy(dispositivos[num_dispositivos].id, id->valuestring);
     strcpy(dispositivos[num_dispositivos].IP, IP->valuestring);
     dispositivos[num_dispositivos].L_01 = L_01->valueint;
@@ -250,8 +251,6 @@ void *recebeDistribuido()
 int enviaDistribuido(int item, const char* str)
 {
 
-  
-
   struct sockaddr_in client;
 
   int socketid = socket(AF_INET, SOCK_STREAM, 0);
@@ -278,7 +277,6 @@ int enviaDistribuido(int item, const char* str)
   }
   appendfile(palavra, dispositivos[item].id);
   close(socketid);
-
   return 1;
 }
 

@@ -29,7 +29,7 @@ int qtdPessoas;
 
 
 void ativaDesativaDispositivo(const char* str);
-void desativaDispositivos();
+void desativaDispositivos(int mode);
 void* handleGPIO(); //handle sensor state changes
 
 #endif /* GPIO_H_ */
